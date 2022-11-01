@@ -1,7 +1,6 @@
 import RPi.GPIO as GPIO
 import time
 
-
 GPIO.setmode(GPIO.BCM) # BOARD or BCM
 GPIO.setwarnings(False)
 
@@ -27,7 +26,6 @@ def Buzz(buzzPin,freq,duration_ms):
     time.sleep(duration_s)
     buzzer.stop
 
-
 while True:
     # c_= 262 Hz
     # c# =
@@ -50,7 +48,6 @@ while True:
         elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.LOW:
             Buzz(19,349,10) # F
         elif GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.LOW:
-            Buzz(19,370,10) # F#
-            
+            Buzz(19,370,10) # F#            
 
 GPIO.cleanup()
