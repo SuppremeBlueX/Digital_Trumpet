@@ -26,23 +26,25 @@ def Buzz(buzzPin,freq,duration_ms):
     time.sleep(duration_s)
     buzzer.stop
 
-while True:
-    if GPIO.input(mouthpiece) == GPIO.HIGH:
-        if GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.LOW:
-            Buzz(19,262,10) # C (262 Hz)
-        elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.HIGH:
-            Buzz(19,278,10) # C# (278 Hz)
-        elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.HIGH:
-            Buzz(19,294,10) # D (294 Hz)
-        elif GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.HIGH:
-            Buzz(19,311,10) # D# (311 Hz)
-        elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.LOW:
-            Buzz(19,330,10) # E (330 Hz)
-        elif GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.HIGH:
-            Buzz(19,330,10) # E (Alternate fingering)
-        elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.LOW:
-            Buzz(19,349,10) # F (349 Hz)
-        elif GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.LOW:
-            Buzz(19,370,10) # F# (370 Hz)     
 
-GPIO.cleanup()
+try:
+    while True:
+        if GPIO.input(mouthpiece) == GPIO.HIGH:
+            if GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.LOW:
+                Buzz(19,262,10) # C (262 Hz)
+            elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.HIGH:
+                Buzz(19,278,10) # C# (278 Hz)
+            elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.HIGH:
+                Buzz(19,294,10) # D (294 Hz)
+            elif GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.HIGH:
+                Buzz(19,311,10) # D# (311 Hz)
+            elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.LOW:
+                Buzz(19,330,10) # E (330 Hz)
+            elif GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.HIGH:
+                Buzz(19,330,10) # E (Alternate fingering)
+            elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.LOW:
+                Buzz(19,349,10) # F (349 Hz)
+            elif GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.LOW:
+                Buzz(19,370,10) # F# (370 Hz)     
+finally:
+    GPIO.cleanup()
