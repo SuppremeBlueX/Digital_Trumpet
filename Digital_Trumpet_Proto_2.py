@@ -27,10 +27,8 @@ mixer.init()
 sample_dir = "Trumpet_Samples/Sound/"
 
 # Load the sample pitches (needed to be 16bit pcms)
+# Use audacity to convert to 16bit PCMs
 
-# ffmpeg -f s16le -ar 44.1k -ac 2 -i (old filename).wav (new filename).wav
-    # ffmpeg -f s16le -ar 44.1k -ac 2 -i C.wav C4_16bit.wav
-    # ffmpeg -f s16le -ar 44.1k -ac 2 -i C_sharp.wav C_sharp4_16bit.wav
 sound_c4 = mixer.Sound(f"{sample_dir}C4.wav")
 sound_csharp4 = mixer.Sound(f"{sample_dir}C_sharp4.wav")
 #sound_d4 = mixer.Sound(f"{sample_dir}D.wav")
