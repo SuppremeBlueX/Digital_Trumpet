@@ -11,8 +11,6 @@ valve2 = 20 # pin 38
 valve3 = 21 # pin 40
 mouthpiece = 12 # pin 32
 
-buzzerpin = 19 # pin 35
-
 # GPIO setup
 GPIO.setup(valve1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(valve2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
