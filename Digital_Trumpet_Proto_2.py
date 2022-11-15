@@ -29,32 +29,30 @@ sample_dir = "Trumpet_Samples/Sound/"
 # Load the sample pitches (needed to be 16bit pcms)
 # Use audacity to convert to 16bit PCMs
 
-sound_c4 = mixer.Sound(f"{sample_dir}C4.wav")
-sound_csharp4 = mixer.Sound(f"{sample_dir}C_sharp4.wav")
-#sound_d4 = mixer.Sound(f"{sample_dir}D.wav")
-#sound_dsharp4 = mixer.Sound(f"{sample_dir}D_sharp.wav")
-#sound_e4 = mixer.Sound(f"{sample_dir}E.wav")
-#sound_f4 = mixer.Sound(f"{sample_dir}F.wav")
-#sound_fsharp4 = mixer.Sound(f"{sample_dir}F_sharp.wav")
+sound_array = [
+    c4 = mixer.Sound(f"{sample_dir}C4.wav"),
+    csharp4 = mixer.Sound(f"{sample_dir}C_sharp4.wav"),
+    d4 = mixer.Sound(f"{sample_dir}D.wav"),
+    dsharp4 = mixer.Sound(f"{sample_dir}D_sharp.wav"),
+    e4 = mixer.Sound(f"{sample_dir}E.wav"),
+    f4 = mixer.Sound(f"{sample_dir}F.wav"),
+    fsharp4 = mixer.Sound(f"{sample_dir}F_sharp.wav")
+]
+array_int = 0
 
 try:
     while True:
         
         if GPIO.input(mouthpiece) == GPIO.HIGH:
-            if not mixer.get_busy():
-                sound_c4.stop()
-                sound_c4.play()
-                time.sleep(3)
-            elif GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.LOW:
+            if GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.LOW:
+                sound_array[array_int].stop()
                 print("c")
-                #sound_c4.play() # C (262 Hz)
+                array_int = 0 # C (262 Hz)
+                sound_array[array_int].play() 
             elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.HIGH:
+                sound_array[array_int].stop()
                 print("c#")
-                #sound_csharp4.play() # C# (278 Hz)
-        else:
-            sound_c4.stop()
-            sound_csharp4.stop()
+                array_int = 1 # C# (278 Hz)
+                sound_array[array_int].play()
 finally:
     GPIO.cleanup()
-
-
