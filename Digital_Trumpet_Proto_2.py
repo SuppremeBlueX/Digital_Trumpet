@@ -21,11 +21,9 @@ GPIO.setup(buzzerpin, GPIO.OUT)
 # Initialize Pygame Mixer
 mixer.init()
 
-# 
 sample_dir = "Trumpet_Samples/Sound/"
 
-# Load the sample pitches (needed to be 16bit pcms)
-# Use audacity to convert to 16bit PCMs
+# Load the sample pitches (they need to be 16bit pcms, not 32bit floats)
 
 sound_array = [
     mixer.Sound(f"{sample_dir}C4.wav"),
