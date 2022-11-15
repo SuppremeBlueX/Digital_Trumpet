@@ -30,29 +30,61 @@ sample_dir = "Trumpet_Samples/Sound/"
 # Use audacity to convert to 16bit PCMs
 
 sound_array = [
-    c4 = mixer.Sound(f"{sample_dir}C4.wav"),
-    csharp4 = mixer.Sound(f"{sample_dir}C_sharp4.wav"),
-    d4 = mixer.Sound(f"{sample_dir}D.wav"),
-    dsharp4 = mixer.Sound(f"{sample_dir}D_sharp.wav"),
-    e4 = mixer.Sound(f"{sample_dir}E.wav"),
-    f4 = mixer.Sound(f"{sample_dir}F.wav"),
-    fsharp4 = mixer.Sound(f"{sample_dir}F_sharp.wav")
+    mixer.Sound(f"{sample_dir}C4.wav"),
+    mixer.Sound(f"{sample_dir}C_sharp4.wav"),
+    mixer.Sound(f"{sample_dir}D.wav"),
+    mixer.Sound(f"{sample_dir}D_sharp.wav"),
+    mixer.Sound(f"{sample_dir}E.wav"),
+    mixer.Sound(f"{sample_dir}F.wav"),
+    mixer.Sound(f"{sample_dir}F_sharp.wav")
 ]
-array_int = 0
+array_int = NULL
 
 try:
     while True:
         
         if GPIO.input(mouthpiece) == GPIO.HIGH:
-            if GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.LOW:
-                sound_array[array_int].stop()
+            if GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.LOW: # C
+                if array_int != 0:
+                    sound_array[array_int].stop()
                 print("c")
-                array_int = 0 # C (262 Hz)
+                array_int = 0
                 sound_array[array_int].play() 
-            elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.HIGH:
-                sound_array[array_int].stop()
-                print("c#")
-                array_int = 1 # C# (278 Hz)
-                sound_array[array_int].play()
+            elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.HIGH:  # C#
+                if array_int != 1:
+                    sound_array[array_int].stop()
+                    print("c#")
+                    array_int = 1
+                    sound_array[array_int].play()
+            elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.HIGH:  # D
+                if array_int != 2:
+                    sound_array[array_int].stop()
+                    print("D")
+                    array_int = 2
+                    sound_array[array_int].play()
+            elif GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.HIGH:  # D#
+                if array_int != 3:
+                    sound_array[array_int].stop()
+                    print("D#")
+                    array_int = 3
+                    sound_array[array_int].play()
+            elif (GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.LOW) or (GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.HIGH):  # E (including alternate fingering)
+                if array_int != 4:
+                    sound_array[array_int].stop()
+                    print("E")
+                    array_int = 4
+                    sound_array[array_int].play()
+            elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.LOW:  # F
+                if array_int != 5:
+                    sound_array[array_int].stop()
+                    print("F")
+                    array_int = 5
+                    sound_array[array_int].play()
+            elif GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.LOW:  # F
+                if array_int != 6:
+                    sound_array[array_int].stop()
+                    print("F#")
+                    array_int = 6
+                    sound_array[array_int].play()
 finally:
     GPIO.cleanup()
