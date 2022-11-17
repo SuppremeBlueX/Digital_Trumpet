@@ -35,7 +35,7 @@ sound_array = [
 ]
 
 valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): ('c4',0),
-              (GPIO.HIGH,GPIO.HIGH,GPIO.HIGH): ('c#',1),
+              (GPIO.HIGH,GPIO.HIGH,GPIO.HIGH): ('c#4',1),
               (GPIO.HIGH,GPIO.LOW,GPIO.HIGH): ('d4',2),
               (GPIO.LOW,GPIO.HIGH,GPIO.HIGH): ('d#4',3),
               (GPIO.HIGH,GPIO.HIGH,GPIO.LOW): ('e4',4),
