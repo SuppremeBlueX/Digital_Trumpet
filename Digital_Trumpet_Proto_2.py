@@ -34,18 +34,30 @@ sound_array = [
     mixer.Sound(f"{sample_dir}F_sharp4.wav")
 ]
 
-valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): ('c4',0)}
-
+valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): ('c4',0),
+              (GPIO.HIGH,GPIO.HIGH,GPIO.HIGH): ('c#',1),
+              (GPIO.HIGH,GPIO.LOW,GPIO.HIGH): ('d4',2),
+              (GPIO.LOW,GPIO.HIGH,GPIO.HIGH): ('d#4',3),
+              (GPIO.HIGH,GPIO.HIGH,GPIO.LOW): ('e4',4),
+              (GPIO.LOW,GPIO.LOW,GPIO.HIGH): ('e_alt4',4),
+              (GPIO.HIGH,GPIO.LOW,GPIO.LOW): ('f4',5),
+              (GPIO.LOW,GPIO.HIGH,GPIO.LOW): ('f#4',6)}
+array_id = None
 try:
     while True:
         if GPIO.input(mouthpiece) == GPIO.HIGH:
             valves = (GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
             note_name, array_id = valve_dict[valves]
-            sound_array[array_id].stop() 
             print(note_name)
-            sound_array[array_id].play()
-            
+            if not mixer.get_busy():
+                sound_array[array_id].play()
+                sound_playing = array_id
+            elif sound_playing != array_id:
+                sound_array[sound_playing].stop()
+                sound_array[array_id].play()
+                sound_playing = array_id
         else:
-            sound_array[array_id].stop()
+            if array_id != None:
+                sound_array[array_id].stop()
 finally:
     GPIO.cleanup()

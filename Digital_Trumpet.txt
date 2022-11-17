@@ -1,1 +1,6 @@
 		Digital Trumpet Prototype Version 2.0
+
+
+To Do:
+	Loop
+	(Attack, sustain, release portions of files)
