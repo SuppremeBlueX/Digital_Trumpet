@@ -33,64 +33,64 @@ sound_array = [
     mixer.Sound(f"{sample_dir}F4.wav"),
     mixer.Sound(f"{sample_dir}F_sharp4.wav")
 ]
-array_int = None
+
+array_id = None
 
 try:
     while True:
-        
         if GPIO.input(mouthpiece) == GPIO.HIGH:
             if GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.LOW: # C
-                if array_int != 0:
-                    if array_int != None: # Null check
-                        sound_array[array_int].stop() 
+                if array_id != 0:
+                    if array_id != None: # Null check
+                        sound_array[array_id].stop() 
                     print("c")
-                    array_int = 0
-                    sound_array[array_int].play() 
+                    array_id = 0
+                    sound_array[array_id].play()
             elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.HIGH:  # C#
-                if array_int != 1:
-                    if array_int != None:
-                        sound_array[array_int].stop()
+                if array_id != 1:
+                    if array_id != None:
+                        sound_array[array_id].stop()
                     print("c#")
-                    array_int = 1
-                    sound_array[array_int].play()
+                    array_id = 1
+                    sound_array[array_id].play()
             elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.HIGH:  # D
-                if array_int != 2:
-                    if array_int != None:
-                        sound_array[array_int].stop()
+                if array_id != 2:
+                    if array_id != None:
+                        sound_array[array_id].stop()
                     print("D")
-                    array_int = 2
-                    sound_array[array_int].play()
+                    array_id = 2
+                    sound_array[array_id].play()
             elif GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.HIGH:  # D#
-                if array_int != 3:
-                    if array_int != None:
-                        sound_array[array_int].stop()
+                if array_id != 3:
+                    if array_id != None:
+                        sound_array[array_id].stop()
                     print("D#")
-                    array_int = 3
-                    sound_array[array_int].play()
+                    array_id = 3
+                    sound_array[array_id].play()
             elif (GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.LOW) or (GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.HIGH):  # E (including alternate fingering)
-                if array_int != 4:
-                    if array_int != None:
-                        sound_array[array_int].stop()
+                if array_id != 4:
+                    if array_id != None:
+                        sound_array[array_id].stop()
                     print("E")
-                    array_int = 4
-                    sound_array[array_int].play()
+                    array_id = 4
+                    sound_array[array_id].play()
             elif GPIO.input(valve1) == GPIO.HIGH and GPIO.input(valve2) == GPIO.LOW and GPIO.input(valve3) == GPIO.LOW:  # F
-                if array_int != 5:
-                    if array_int != None:
-                        sound_array[array_int].stop()
+                if array_id != 5:
+                    if array_id != None:
+                        sound_array[array_id].stop()
                     print("F")
-                    array_int = 5
-                    sound_array[array_int].play()
+                    array_id = 5
+                    sound_array[array_id].play()
             elif GPIO.input(valve1) == GPIO.LOW and GPIO.input(valve2) == GPIO.HIGH and GPIO.input(valve3) == GPIO.LOW:  # F
-                if array_int != 6:
-                    if array_int != None:
-                        sound_array[array_int].stop()
+                if array_id != 6:
+                    if array_id != None:
+                        sound_array[array_id].stop()
                     print("F#")
-                    array_int = 6
-                    sound_array[array_int].play()
+                    array_id = 6
+                    sound_array[array_id].play()
         else:
-            if array_int != None:
-                sound_array[array_int].stop()
-            array_int = None
+            if array_id != None:
+                sound_array[array_id].stop()
+            array_id = None
 finally:
     GPIO.cleanup()
