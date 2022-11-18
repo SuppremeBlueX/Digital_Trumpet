@@ -59,5 +59,6 @@ try:
         else:
             if array_id != None:
                 sound_array[array_id].stop()
+            # sound_release
 finally:
     GPIO.cleanup()
