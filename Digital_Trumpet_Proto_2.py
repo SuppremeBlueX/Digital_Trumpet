@@ -34,6 +34,10 @@ sound_array = [
     mixer.Sound(f"{sample_dir}F_sharp4.wav")
 ]
 
+sound_attack = []
+sound_sustain = []
+sound_release = []
+
 valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): ('c4',0),
               (GPIO.HIGH,GPIO.HIGH,GPIO.HIGH): ('c#4',1),
               (GPIO.HIGH,GPIO.LOW,GPIO.HIGH): ('d4',2),
@@ -59,6 +63,6 @@ try:
         else:
             if array_id != None:
                 sound_array[array_id].stop()
-            # sound_release
+                # sound_release[array_id].play()
 finally:
     GPIO.cleanup()
