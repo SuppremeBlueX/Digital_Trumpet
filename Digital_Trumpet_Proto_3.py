@@ -1,6 +1,8 @@
 import RPi.GPIO as GPIO
 import time
-from pygame import mixer
+import pydub
+# added dependencies, pydub
+from pydub.playback import play
 
 GPIO.setmode(GPIO.BCM) # BOARD or BCM
 GPIO.setwarnings(False)
@@ -17,25 +19,24 @@ GPIO.setup(valve2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(valve3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(mouthpiece, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-# Initialize Pygame Mixer
-mixer.init()
-
 sample_dir = "Trumpet_Samples/Sound/"
 
 # Load the sample pitches (they need to be 16bit pcms, not 32bit floats)
 
 sound_array = [
-    mixer.Sound(f"{sample_dir}C4.wav"),
-    mixer.Sound(f"{sample_dir}C_sharp4.wav"),
-    mixer.Sound(f"{sample_dir}D4.wav"),
-    mixer.Sound(f"{sample_dir}D_sharp4.wav"),
-    mixer.Sound(f"{sample_dir}E4.wav"),
-    mixer.Sound(f"{sample_dir}F4.wav"),
-    mixer.Sound(f"{sample_dir}F_sharp4.wav")
+    pydub.AudioSegment.from_file(f"{sample_dir}C4.wav"),
+    pydub.AudioSegment.from_file(f"{sample_dir}C_sharp4.wav"),
+    pydub.AudioSegment.from_file(f"{sample_dir}D4.wav"),
+    pydub.AudioSegment.from_file(f"{sample_dir}D_sharp4.wav"),
+    pydub.AudioSegment.from_file(f"{sample_dir}E4.wav"),
+    pydub.AudioSegment.from_file(f"{sample_dir}F4.wav"),
+    pydub.AudioSegment.from_file(f"{sample_dir}F_sharp4.wav")
 ]
 
 sound_attack = []
+
 sound_sustain = []
+    
 sound_release = []
 
 valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): ('c4',0),
@@ -47,6 +48,7 @@ valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): ('c4',0),
               (GPIO.HIGH,GPIO.LOW,GPIO.LOW): ('f4',5),
               (GPIO.LOW,GPIO.HIGH,GPIO.LOW): ('f#4',6)}
 array_id = None
+
 try:
     while True:
         if GPIO.input(mouthpiece) == GPIO.HIGH:
