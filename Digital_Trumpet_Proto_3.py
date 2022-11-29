@@ -64,5 +64,6 @@ try:
             if array_id != None:
                 sound_array[array_id].stop()
                 # sound_release[array_id].play()
+            print("No Sound")
 finally:
     GPIO.cleanup()
