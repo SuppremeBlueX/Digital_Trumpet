@@ -55,17 +55,10 @@ try:
             valves = (GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
             note_name, array_id = valve_dict[valves]
             print(note_name)
-            if not mixer.get_busy():
-                sound_array[array_id].play()
-                sound_playing = array_id
-            elif sound_playing != array_id:
-                sound_array[sound_playing].stop()
-                sound_array[array_id].play()
-                sound_playing = array_id
+            sound_array[array_id].play()
+            print("Note done playing")
+            sound_playing = array_id
         else:
-            if array_id != None:
-                sound_array[array_id].stop()
-                # sound_release[array_id].play()
-            print("No Sound")
+            continue
 finally:
     GPIO.cleanup()
