@@ -19,18 +19,18 @@ GPIO.setup(valve2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(valve3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(mouthpiece, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-sample_dir = "Trumpet_Samples/Sound/"
+sound_dir = "Trumpet_Samples/Sound/"
 
 # Load the sample pitches (they need to be 16bit pcms, not 32bit floats)
 
 sound_array = [
-    pydub.AudioSegment.from_file(f"{sample_dir}C4.wav"),
-    pydub.AudioSegment.from_file(f"{sample_dir}C_sharp4.wav"),
-    pydub.AudioSegment.from_file(f"{sample_dir}D4.wav"),
-    pydub.AudioSegment.from_file(f"{sample_dir}D_sharp4.wav"),
-    pydub.AudioSegment.from_file(f"{sample_dir}E4.wav"),
-    pydub.AudioSegment.from_file(f"{sample_dir}F4.wav"),
-    pydub.AudioSegment.from_file(f"{sample_dir}F_sharp4.wav")
+    pydub.AudioSegment.from_file(f"{sound_dir}C4.wav"),
+    pydub.AudioSegment.from_file(f"{sound_dir}C_sharp4.wav"),
+    pydub.AudioSegment.from_file(f"{sound_dir}D4.wav"),
+    pydub.AudioSegment.from_file(f"{sound_dir}D_sharp4.wav"),
+    pydub.AudioSegment.from_file(f"{sound_dir}E4.wav"),
+    pydub.AudioSegment.from_file(f"{sound_dir}F4.wav"),
+    pydub.AudioSegment.from_file(f"{sound_dir}F_sharp4.wav")
 ]
 
 sound_attack = []
