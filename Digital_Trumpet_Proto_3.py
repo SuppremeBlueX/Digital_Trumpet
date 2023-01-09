@@ -37,7 +37,15 @@ sound_attack = []
 
 sound_sustain = []
     
-sound_release = []
+sound_release = [
+    pydub.AudioSegment.from_file(f"{sound_dir}C4_release.wav"),
+    pydub.AudioSegment.from_file(f"{sound_dir}C_sharp4_release.wav"),
+    pydub.AudioSegment.from_file(f"{sound_dir}D4_release.wav"),
+    pydub.AudioSegment.from_file(f"{sound_dir}D_sharp4_release.wav"),
+    pydub.AudioSegment.from_file(f"{sound_dir}E4_release.wav"),
+    pydub.AudioSegment.from_file(f"{sound_dir}F4_release.wav"),
+    pydub.AudioSegment.from_file(f"{sound_dir}F_sharp4_release.wav")
+]
 
 valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): ('c4',0),
               (GPIO.HIGH,GPIO.HIGH,GPIO.HIGH): ('c#4',1),
@@ -61,4 +69,5 @@ try:
         else:
             continue
 finally:
+    play(sound_release[array_id])
     GPIO.cleanup()
