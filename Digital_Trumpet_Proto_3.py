@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 import pydub
 # added dependencies, pydub
-from pydub.playback import play
+from pydub.playback import play, _play_with_simpleaudio
 
 GPIO.setmode(GPIO.BCM) # BOARD or BCM
 GPIO.setwarnings(False)
@@ -55,7 +55,7 @@ try:
             valves = (GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
             note_name, array_id = valve_dict[valves]
             print(note_name)
-            sound_array[array_id].play()
+            play(sound_array[array_id])
             print("Note done playing")
             sound_playing = array_id
         else:
