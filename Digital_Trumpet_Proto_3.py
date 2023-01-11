@@ -24,13 +24,13 @@ sound_dir = "Trumpet_Samples/Sound/"
 # Load the sample pitches (they need to be 16bit pcms, not 32bit floats)
 
 sound_array = [
-    pydub.AudioSegment.from_file(f"{sound_dir}C4.wav"),
-    pydub.AudioSegment.from_file(f"{sound_dir}C_sharp4.wav"),
-    pydub.AudioSegment.from_file(f"{sound_dir}D4.wav"),
-    pydub.AudioSegment.from_file(f"{sound_dir}D_sharp4.wav"),
-    pydub.AudioSegment.from_file(f"{sound_dir}E4.wav"),
-    pydub.AudioSegment.from_file(f"{sound_dir}F4.wav"),
-    pydub.AudioSegment.from_file(f"{sound_dir}F_sharp4.wav")
+    pydub.AudioSegment.from_wav(f"{sound_dir}C4.wav"),
+    pydub.AudioSegment.from_wav(f"{sound_dir}C_sharp4.wav"),
+    pydub.AudioSegment.from_wav(f"{sound_dir}D4.wav"),
+    pydub.AudioSegment.from_wav(f"{sound_dir}D_sharp4.wav"),
+    pydub.AudioSegment.from_wav(f"{sound_dir}E4.wav"),
+    pydub.AudioSegment.from_wav(f"{sound_dir}F4.wav"),
+    pydub.AudioSegment.from_wav(f"{sound_dir}F_sharp4.wav")
 ]
 
 sound_attack = []
@@ -38,13 +38,13 @@ sound_attack = []
 sound_sustain = []
     
 sound_release = [
-    pydub.AudioSegment.from_file(f"{sound_dir}C4_release.wav"),
-    pydub.AudioSegment.from_file(f"{sound_dir}C_sharp4_release.wav"),
-    pydub.AudioSegment.from_file(f"{sound_dir}D4_release.wav"),
-    pydub.AudioSegment.from_file(f"{sound_dir}D_sharp4_release.wav"),
-    pydub.AudioSegment.from_file(f"{sound_dir}E4_release.wav"),
-    pydub.AudioSegment.from_file(f"{sound_dir}F4_release.wav"),
-    pydub.AudioSegment.from_file(f"{sound_dir}F_sharp4_release.wav")
+    pydub.AudioSegment.from_wav(f"{sound_dir}C4_release.wav"),
+    pydub.AudioSegment.from_wav(f"{sound_dir}C_sharp4_release.wav"),
+    pydub.AudioSegment.from_wav(f"{sound_dir}D4_release.wav"),
+    pydub.AudioSegment.from_wav(f"{sound_dir}D_sharp4_release.wav"),
+    pydub.AudioSegment.from_wav(f"{sound_dir}E4_release.wav"),
+    pydub.AudioSegment.from_wav(f"{sound_dir}F4_release.wav"),
+    pydub.AudioSegment.from_wav(f"{sound_dir}F_sharp4_release.wav")
 ]
 
 valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): ('c4',0),
@@ -67,7 +67,6 @@ try:
             print("Note done playing")
             sound_playing = array_id
         else:
-            continue
+            play(sound_release[array_id])
 finally:
-    play(sound_release[array_id])
     GPIO.cleanup()
