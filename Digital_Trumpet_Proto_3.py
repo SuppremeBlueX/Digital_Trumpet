@@ -2,14 +2,15 @@ import RPi.GPIO as GPIO
 import time
 # added dependency: pydub
 import pydub
-from pydub.playback import play, _play_with_simpleaudio
+from pydub.playback import _play_with_simpleaudio
+# added dependency: simpleaudio
 
 # Raspberry Pi Setup
 GPIO.setmode(GPIO.BCM) # BOARD or BCM
 GPIO.setwarnings(False)
 
 # These pin values are the GPIO numbers, not the pin number
-valve1 = 16 # pin 36 (GPIO 12)
+valve1 = 16 # pin 36 (GPIO 16)
 valve2 = 20 # pin 38 (GPIO 20)
 valve3 = 21 # pin 40 (GPIO 21)
 mouthpiece = 12 # pin 32 (GPIO 12)
@@ -62,17 +63,31 @@ valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): ('c4',0),
               (GPIO.LOW,GPIO.HIGH,GPIO.LOW): ('f#4',6)}
 array_id = None
 volume = 0
+loop_var = 0
 
 try:
     while True:
         if GPIO.input(mouthpiece) == GPIO.HIGH:
             valves = (GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
             note_name, array_id = valve_dict[valves]
+            if loop_var == 0:
+                playback = _play_with_simpleaudio((sound_array[array_id])[:50])
+                time.sleep(.05)
+            elif loop_var > 0:
+                playback = _play_with_simpleaudio((sound_array[array_id])[2500:2600])
+                time.sleep(0.094)
+            else:
+                continue
             print(note_name)
-            play((sound_array[array_id]+volume)[0:4000])
-            print("Note done playing")
-            sound_playing = array_id
+            loop_var += 1
         else:
-            continue
+            loop_var = 0
+            if array_id != None:
+                playback.stop()
+                playback = _play_with_simpleaudio((sound_array[array_id])[3500:])
+                print("Note ending")
+                array_id = None
+            else:
+                continue
 finally:
     GPIO.cleanup()
