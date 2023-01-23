@@ -7,7 +7,7 @@ chunk = 1024
 
 wf = wave.open(note,'rb')
 
-p = pyaudio.Pyaudio()
+p = pyaudio.PyAudio()
 
 stream = p.open(format = p.get_format_from_width(wf.getsampwidth()),
                 channels = wf.getnchannels(),
