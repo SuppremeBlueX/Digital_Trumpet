@@ -69,7 +69,7 @@ array_id = None
 volume = 0
 loop_var = 0
 
-def play(wav_file):
+def play(wav_file,volume):
     global is_playing
     global my_thread
     chunk = 1024
@@ -89,11 +89,11 @@ def play(wav_file):
         rate = wf.getframerate(),
         output = True) # Output determines whether or not the sound actually plays.
     
-    data = wf.readframes(chunk)
+    data = wf.readframes(chunk*(volume/100)) # Test if this actually works (* (volume/100))
 
     while data != '' and is_playing:
         stream.write(data)
-        data = wf.readframes(chunk)
+        data = wf.readframes(chunk*(volume/100)) # Test if this actually works (* (volume/100))
 
     # after the sound is done playing
     stream.stop_stream()
