@@ -32,28 +32,6 @@ release_dir = "Trumpet_Samples/Sound/Release"
 # haven't tested with others like pydub
 # pydub doesn't seem to like them either
 # maybe pyaudio is fine with them???
-
-sound_array = [
-    f"{sound_dir}/C4.wav",
-    f"{sound_dir}/C_sharp4.wav",
-    f"{sound_dir}/D4.wav",
-    f"{sound_dir}/D_sharp4.wav",
-    f"{sound_dir}/E4.wav",
-    f"{sound_dir}/F4.wav",
-    f"{sound_dir}/F_sharp4.wav"
- ]
-
-sound_attack = []
-
-sound_sustain = [
-    f"{sustain_dir}/C4_Sustain.wav",
-    #f"{sound_dir}/C_sharp4_Sustain.wav",
-    #f"{sound_dir}/D4_Sustain.wav",
-    #f"{sound_dir}/D_sharp4_Sustain.wav",
-    f"{sustain_dir}/E4_Sustain.wav",
-    #f"{sound_dir}/F4_Sustain.wav",
-    #f"{sound_dir}/F_sharp4_Sustain.wav"
-    ]
     
 sound_release = [
 #     pydub.AudioSegment.from_wav(f"{sound_dir}C4_release.wav"),
@@ -65,16 +43,50 @@ sound_release = [
 #     pydub.AudioSegment.from_wav(f"{sound_dir}F_sharp4_release.wav")
 ]
 
-# Valve combination to note, and an ID (lowest note has to be ID: '0', then '1', '2', etc. Alternate Fingerings have the same ID as their normal counterparts)
+# Sound dictionary to tie notes and their sound
 
-valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): ('c4',0),
-              (GPIO.HIGH,GPIO.HIGH,GPIO.HIGH): ('c#4',1),
-              (GPIO.HIGH,GPIO.LOW,GPIO.HIGH): ('d4',2),
-              (GPIO.LOW,GPIO.HIGH,GPIO.HIGH): ('d#4',3),
-              (GPIO.HIGH,GPIO.HIGH,GPIO.LOW): ('e4',4),
-              (GPIO.LOW,GPIO.LOW,GPIO.HIGH): ('e_alt4',4),
-              (GPIO.HIGH,GPIO.LOW,GPIO.LOW): ('f4',5),
-              (GPIO.LOW,GPIO.HIGH,GPIO.LOW): ('f#4',6)}
+sound_sustain_dict = {
+            'c4': f"{sustain_dir}/C4_Sustain.wav",
+            'c#4': f"{sustain_dir}/C_sharp4_Sustain.wav",
+            'd4': f"{sustain_dir}/D4_Sustain.wav",
+            'd#4': f"{sustain_dir}/D_sharp4_Sustain.wav",
+            'e4': f"{sustain_dir}/E4_Sustain.wav",
+            'e_alt4': f"{sustain_dir}/E4_Sustain.wav",
+            'f4': f"{sustain_dir}/F4_Sustain.wav",
+            'f#4': f"{sustain_dir}/F_sharp4_Sustain.wav"
+              }
+sound_dict = {
+            'c4': f"{sound_dir}/C4.wav",
+            'c#4': f"{sound_dir}/C_sharp4.wav",
+            'd4': f"{sound_dir}/D4.wav",
+            'd#4': f"{sound_dir}/D_sharp4.wav",
+            'e4': f"{sound_dir}/E4.wav",
+            'e_alt4': f"{sound_dir}/E4.wav",
+            'f4': f"{sound_dir}/F4.wav",
+            'f#4': f"{sound_dir}/F_sharp4.wav"
+            }
+
+sound_release_dict = {
+            'c4': f"{sound_dir}/C4.wav",
+            'c#4': f"{sound_dir}/C_sharp4.wav",
+            'd4': f"{sound_dir}/D4.wav",
+            'd#4': f"{sound_dir}/D_sharp4.wav",
+            'e4': f"{sound_dir}/E4.wav",
+            'e_alt4': f"{sound_dir}/E4.wav",
+            'f4': f"{sound_dir}/F4.wav",
+            'f#4': f"{sound_dir}/F_sharp4.wav"
+            }
+
+# Valve combination to note, subject to change
+
+valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): 'c4',
+              (GPIO.HIGH,GPIO.HIGH,GPIO.HIGH): 'c#4',
+              (GPIO.HIGH,GPIO.LOW,GPIO.HIGH): 'd4',
+              (GPIO.LOW,GPIO.HIGH,GPIO.HIGH): 'd#4',
+              (GPIO.HIGH,GPIO.HIGH,GPIO.LOW): 'e4',
+              (GPIO.LOW,GPIO.LOW,GPIO.HIGH): 'e_alt4',
+              (GPIO.HIGH,GPIO.LOW,GPIO.LOW): 'f4',
+              (GPIO.LOW,GPIO.HIGH,GPIO.LOW): 'f#4'}
 global is_playing
 global my_thread
 array_id = None
@@ -83,7 +95,6 @@ volume = 0
 
 def play(wav_file):
     global is_playing
-    print("Playing on Thread")
     is_playing = True
     chunk = 1024
     while is_playing == True:
@@ -104,6 +115,9 @@ def play(wav_file):
             output = True) # Output determines whether or not the sound actually plays.
         
         data = wf.readframes(chunk)
+        
+#         while data == '' and is_playing == True:
+#             stream.write(chr(0)*chunk*channels*2)
 
         while data != '' and is_playing == True:
             stream.write(data)
@@ -120,25 +134,25 @@ try:
     while True:
         if GPIO.input(mouthpiece) == GPIO.HIGH:
             valves = (GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
-            note_name, array_id = valve_dict[valves]
+            note_name = valve_dict[valves]
             if loop_var == 0:
                 is_playing = True
-                my_thread = threading.Thread(target=play,args = [sound_array[array_id]])
+                my_thread = threading.Thread(target=play,args = [sound_dict[note_name]])
                 my_thread.start()
                 time.sleep(.05)
             elif loop_var > 0:
-                my_thread = threading.Thread(target=play, args = [sound_sustain[array_id]])
+                my_thread = threading.Thread(target=play,args = [sound_dict[note_name]])
                 my_thread.start()
-                time.sleep(0.1)
+                time.sleep(1)
             else:
                 continue
             print(note_name)
+            print(loop_var)
             loop_var += 1
         else:
             loop_var = 0
             if array_id != None:
-                my_thread = threading.Thread(target=play, args = [sound_array[array_id]])
-                
+                my_thread = threading.Thread(target=play, args = [sound_array[array_id]])    
                 print("Note ending")
                 array_id = None
             else:
@@ -146,4 +160,6 @@ try:
             is_playing = False
             print("Note stopped")
 finally:
+    is_playing = False
+    print("Error")
     GPIO.cleanup()
