@@ -23,12 +23,15 @@ GPIO.setup(valve3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(mouthpiece, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 sound_dir = "Trumpet_Samples/Sound"
+attack_dir = "Trumpet_Samples/Sound/Attack"
 sustain_dir = "Trumpet_Samples/Sound/Sustain"
+release_dir = "Trumpet_Samples/Sound/Release"
 
 # Load the sample pitches
 # pygames didnt like 32bit floats (they need to be 16bit pcms, not 32bit floats)
 # haven't tested with others like pydub
 # pydub doesn't seem to like them either
+# maybe pyaudio is fine with them???
 
 sound_array = [
     f"{sound_dir}/C4.wav",
