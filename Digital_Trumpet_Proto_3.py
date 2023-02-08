@@ -125,10 +125,13 @@ try:
                 is_playing = True
                 my_thread = threading.Thread(target=play,args = [sound_array[array_id]])
                 my_thread.start()
+                current_thread = threading.get_ident()
                 time.sleep(.05)
             elif loop_var > 0:
                 my_thread = threading.Thread(target=play, args = [sound_sustain[array_id]])
+                current_thread.kill()
                 my_thread.start()
+                current_thread = threading.get_ident()
                 time.sleep(0.1)
             else:
                 continue
