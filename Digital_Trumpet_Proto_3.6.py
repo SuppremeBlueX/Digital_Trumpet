@@ -32,16 +32,6 @@ release_dir = "Trumpet_Samples/Sound/Release"
 # Sound dictionary to tie notes with their sound
 
 # is pyaudio good with 32-bit floats, or do they need to be 16-bit PCMs?
-sound_sustain_dict = {
-            'c4': f"{sustain_dir}/C4_Sustain.wav",
-            'c#4': f"{sustain_dir}/C_sharp4_Sustain.wav",
-            'd4': f"{sustain_dir}/D4_Sustain.wav",
-            'd#4': f"{sustain_dir}/D_sharp4_Sustain.wav",
-            'e4': f"{sustain_dir}/E4_Sustain.wav",
-            'e_alt4': f"{sustain_dir}/E4_Sustain.wav",
-            'f4': f"{sustain_dir}/F4_Sustain.wav",
-            'f#4': f"{sustain_dir}/F_sharp4_Sustain.wav"
-              }
 sound_dict = {
             'c4': f"{sound_dir}/C4.wav",
             'c#4': f"{sound_dir}/C_sharp4.wav",
@@ -52,6 +42,28 @@ sound_dict = {
             'f4': f"{sound_dir}/F4.wav",
             'f#4': f"{sound_dir}/F_sharp4.wav"
             }
+
+sound_attack_dict = {
+            'c4': f"{attack_dir}/C4_Attack.wav",
+            'c#4': f"{attack_dir}/C_sharp4_Attack.wav",
+            'd4': f"{attack_dir}/D4_Attack.wav",
+            'd#4': f"{attack_dir}/D_sharp4_Attack.wav",
+            'e4': f"{attack_dir}/E4_Attack.wav",
+            'e_alt4': f"{attack_dir}/E4_Attack.wav",
+            'f4': f"{attack_dir}/F4_Attack.wav",
+            'f#4': f"{attack_dir}/F_sharp4_Attack.wav"
+              }
+
+sound_sustain_dict = {
+            'c4': f"{sustain_dir}/C4_Sustain.wav",
+            'c#4': f"{sustain_dir}/C_sharp4_Sustain.wav",
+            'd4': f"{sustain_dir}/D4_Sustain.wav",
+            'd#4': f"{sustain_dir}/D_sharp4_Sustain.wav",
+            'e4': f"{sustain_dir}/E4_Sustain.wav",
+            'e_alt4': f"{sustain_dir}/E4_Sustain.wav",
+            'f4': f"{sustain_dir}/F4_Sustain.wav",
+            'f#4': f"{sustain_dir}/F_sharp4_Sustain.wav"
+              }
 
 sound_release_dict = {
             'c4': f"{sound_dir}/C4.wav",
@@ -64,7 +76,7 @@ sound_release_dict = {
             'f#4': f"{sound_dir}/F_sharp4.wav"
             }
 
-# Valve combination to note, subject to change
+# Valve combination to note, subject to change / will have a potientiometer variable in the future
 
 valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): 'c4',
               (GPIO.HIGH,GPIO.HIGH,GPIO.HIGH): 'c#4',
@@ -90,6 +102,7 @@ def play(wav_file, lock):
             channels = wf.getnchannels(),
             rate = wf.getframerate(),
             output = True) # Output determines whether or not the sound actually plays.
+
     
     lock.acquire()
     for i in range (wf.getnframes()):
@@ -112,7 +125,7 @@ if __name__ == '__main__':
                 note_name = valve_dict[valves]
                 if loop_var == 0:
                     print(f"Attack {note_name}")
-                    player = Process(target=play,args=(sound_dict[note_name],lock))
+                    player = Process(target=play,args=(sound_attack_dict[note_name],lock))
                     player.start()
                     player.join()
                     print(f"Attack {note_name} finished")
@@ -134,6 +147,8 @@ if __name__ == '__main__':
                 else:
                     continue
                 print("Note stopped")
+    except:
+        pass
     finally:
         is_playing = False
         GPIO.cleanup()
