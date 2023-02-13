@@ -76,7 +76,7 @@ valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): ('c4',0),
               (GPIO.HIGH,GPIO.LOW,GPIO.LOW): ('f4',5),
               (GPIO.LOW,GPIO.HIGH,GPIO.LOW): ('f#4',6)}
 global is_playing
-global my_thread
+my_thread = None
 array_id = None
 loop_var = 0
 volume = 0
@@ -105,7 +105,7 @@ def play(wav_file):
         
         data = wf.readframes(chunk)
 
-        while data != '' and is_playing == True:
+        while data != '':
             stream.write(data)
             data = wf.readframes(chunk)
 
@@ -125,14 +125,13 @@ try:
                 is_playing = True
                 my_thread = threading.Thread(target=play,args = [sound_array[array_id]])
                 my_thread.start()
-                current_thread = threading.get_ident()
-                time.sleep(.05)
+                time.sleep(.5)
             elif loop_var > 0:
-                my_thread = threading.Thread(target=play, args = [sound_sustain[array_id]])
-                current_thread.kill()
+                if my_thread.is_alive():
+                    is_playing = False
+                my_thread = threading.Thread(target=play, args = [sound_sustain[array_id]])  
                 my_thread.start()
-                current_thread = threading.get_ident()
-                time.sleep(0.1)
+                time.sleep(0.25)
             else:
                 continue
             print(note_name)
@@ -141,7 +140,6 @@ try:
             loop_var = 0
             if array_id != None:
                 my_thread = threading.Thread(target=play, args = [sound_array[array_id]])
-                
                 print("Note ending")
                 array_id = None
             else:

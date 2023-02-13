@@ -126,6 +126,9 @@ def play(wav_file):
         # after the sound is done playing
         stream.stop_stream()
         stream.close()
+    # or when is_playing no longer applies
+    stream.stop_stream()
+    stream.close()
     
 
 
@@ -133,17 +136,23 @@ try:
 # https://stackoverflow.com/questions/47513950/how-to-loop-play-an-audio-with-pyaudio [currently working on implementing] [uses threading]
     while True:
         if GPIO.input(mouthpiece) == GPIO.HIGH:
+            thread_number = threading.enumerate()
+            print(thread_number)
             valves = (GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
             note_name = valve_dict[valves]
             if loop_var == 0:
                 is_playing = True
                 my_thread = threading.Thread(target=play,args = [sound_dict[note_name]])
                 my_thread.start()
-                time.sleep(.05)
+                my_thread.join(.1999)
+                time.sleep(.2)
             elif loop_var > 0:
-                my_thread = threading.Thread(target=play,args = [sound_dict[note_name]])
+                if my_thread.is_alive():
+                    is_playing = False
+                my_thread = threading.Thread(target=play,args = [sound_sustain_dict[note_name]])
                 my_thread.start()
-                time.sleep(1)
+                my_thread.join(.0999)
+                time.sleep(.1)
             else:
                 continue
             print(note_name)
