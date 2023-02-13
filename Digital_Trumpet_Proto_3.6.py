@@ -1,6 +1,5 @@
 #Rewriting the code with a few changes, mainly adding the multiprocessing library
 import RPi.GPIO as GPIO
-import time
 import pyaudio
 # added dependency: pyaudio
 import wave
@@ -76,15 +75,14 @@ valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): 'c4',
               (GPIO.HIGH,GPIO.LOW,GPIO.LOW): 'f4',
               (GPIO.LOW,GPIO.HIGH,GPIO.LOW): 'f#4'}
 is_playing = False
-array_id = None
+note_name = None
 loop_var = 0
 volume = 0
+player = None
 
 def play(wav_file, lock):
-    lock.acquire()
     global is_playing
     is_playing = True
-    chunk = 1024
     wf = wave.open(wav_file,'rb')
     p = pyaudio.PyAudio()
     stream = p.open(
@@ -92,20 +90,17 @@ def play(wav_file, lock):
             channels = wf.getnchannels(),
             rate = wf.getframerate(),
             output = True) # Output determines whether or not the sound actually plays.
-    while is_playing == True:
+    
+    lock.acquire()
+    for i in range (wf.getnframes()):
+        data = wf.readframes(i)
+        stream.write(data)
         
-        data = wf.readframes(chunk)
-
-        while data != '':
-            stream.write(data)
-            data = wf.readframes(chunk)
-
-        # after the sound is done playing
-        wf.rewind()
+    # after the sound is done playing
+    lock.release()
     # or when is_playing no longer applies
     stream.stop_stream()
     stream.close()
-    lock.release()
     
 
 if __name__ == '__main__':
@@ -116,25 +111,28 @@ if __name__ == '__main__':
                 valves = (GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
                 note_name = valve_dict[valves]
                 if loop_var == 0:
-                    Process(target=play,args=(sound_dict[note_name],lock)).start()
-                    time.sleep(.2)
-                elif loop_var > 0:
-                    Process(target=play,args=(sound_sustain_dict[note_name],lock)).start()
-                    time.sleep(.1)
-                else:
-                    continue
-                print(note_name)
-                print(loop_var)
+                    print(f"Attack {note_name}")
+                    player = Process(target=play,args=(sound_dict[note_name],lock))
+                    player.start()
+                    player.join()
+                    print(f"Attack {note_name} finished")
+                elif loop_var > 0 and not player.is_alive():
+                    print(f"Sustain {note_name}")
+                    player = Process(target=play,args=(sound_sustain_dict[note_name],lock))
+                    player.start()
+                    print(f"Sustain {note_name} completed")
                 loop_var += 1
             else:
+                is_playing = False
                 loop_var = 0
-                if array_id != None:
-                    Process(target=play,args=(sound_dict[note_name],lock)).start()  
-                    print("Note ending")
-                    array_id = None
+                if note_name != None and not player.is_alive():
+                    print(f"Releasing {note_name}")
+                    p = Process(target=play,args=(sound_release_dict[note_name],lock))
+                    p.start()
+                    print(f"Released {note_name}")
+                    note_name = None
                 else:
                     continue
-                is_playing = False
                 print("Note stopped")
     finally:
         is_playing = False
