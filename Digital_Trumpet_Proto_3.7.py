@@ -116,9 +116,11 @@ while not interrupt_event.is_set():
         if loop_var == 0:
             data, samplerate = sf.read(f"{sound_attack_dict[note_name]}")
             loop_var += 1
+            print("Attack Read")
         # on every other iteration of the note, play the "sustain"
         else:
             data, samplerate = sf.read(f"{sound_sustain_dict[note_name]}")
+            print("Sustain Read")
             
             
         # set the volume
@@ -133,15 +135,19 @@ while not interrupt_event.is_set():
         # wait until the note is complete
         sd.wait()
 
-#note release
-# if there is a note playing
-if note_name != None:
-    # play the note release file
-    data, samplerate = sf.read(f"{sound_release_dict[note_name]}")
-    volume = get_volume_level()
-    data_vol = volume * data
-    sd.play(data_vol, samplerate)
-    sd.wait()
+    #note release
+    # if there is a note playing
+    if note_name != None:
+        # play the note release file
+        data, samplerate = sf.read(f"{sound_release_dict[note_name]}")
+        volume = get_volume_level()
+        data_vol = volume * data
+        print(f"{note_name} ending")
+        sd.play(data_vol, samplerate)
+        sd.wait()
+        # reset variables
+        note_name = None
+        loop_var = 0
     
 #final cleanup
 sd.stop()
