@@ -101,8 +101,23 @@ def get_volume_level():
     return 1
 
 signal.signal(signal.SIGINT, handle_interrupt)
-
-
+ 
+# keep sounds in memory
+note_sound_dict = {
+    ('c4','a'): sf.read(f"{sound_attack_dict('c4')}"),
+    ('d4','a'): sf.read(f"{sound_attack_dict('d4')}"),
+    ('e4','a'): sf.read(f"{sound_attack_dict('e4')}"),
+    # ...
+    ('c4','s'): sf.read(f"{sound_sustain_dict('c4')}"),
+    ('d4','s'): sf.read(f"{sound_sustain_dict('d4')}"),
+    ('e4','s'): sf.read(f"{sound_sustain_dict('e4')}"),
+    # ...
+    ('c4','r'): sf.read(f"{sound_release_dict('c4')}"),
+    ('d4','r'): sf.read(f"{sound_release_dict('d4')}"),
+    ('e4','r'): sf.read(f"{sound_release_dict('e4')}"),
+    # ...
+    }
+ 
 loop_var = 0
 while not interrupt_event.is_set():
     while GPIO.input(mouthpiece) == GPIO.HIGH:
@@ -114,12 +129,12 @@ while not interrupt_event.is_set():
         # these notes are loaded, but not played yet
         # on the first iteration of the note, play the "attack"
         if loop_var == 0:
-            data, samplerate = sf.read(f"{sound_attack_dict[note_name]}")
+            data, samplerate = note_sound_dict[note_name,'a'] # 'a' for attack
             loop_var += 1
             print("Attack Read")
         # on every other iteration of the note, play the "sustain"
         else:
-            data, samplerate = sf.read(f"{sound_sustain_dict[note_name]}")
+            data, samplerate = note_sound_dict[note_name,'s'] # 's' for sustain
             print("Sustain Read")
             
             
@@ -139,7 +154,7 @@ while not interrupt_event.is_set():
     # if there is a note playing
     if note_name != None:
         # play the note release file
-        data, samplerate = sf.read(f"{sound_release_dict[note_name]}")
+        data, samplerate = note_sound_dict[note_name,'s'] # 'r' for release
         volume = get_volume_level()
         data_vol = volume * data
         print(f"{note_name} ending")
