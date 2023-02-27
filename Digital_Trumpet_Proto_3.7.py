@@ -66,14 +66,14 @@ sound_sustain_dict = {
               }
 
 sound_release_dict = {
-            'c4': f"{sound_dir}/C4.wav",
-            'c#4': f"{sound_dir}/C_sharp4.wav",
-            'd4': f"{sound_dir}/D4.wav",
-            'd#4': f"{sound_dir}/D_sharp4.wav",
-            'e4': f"{sound_dir}/E4.wav",
-            'e_alt4': f"{sound_dir}/E4.wav",
-            'f4': f"{sound_dir}/F4.wav",
-            'f#4': f"{sound_dir}/F_sharp4.wav"
+            'c4': f"{release_dir}/C4_Release.wav",
+            'c#4': f"{release_dir}/C_sharp4_Release.wav",
+            'd4': f"{release_dir}/D4_Release.wav",
+            'd#4': f"{release_dir}/D_sharp4_Release.wav",
+            'e4': f"{release_dir}/E4_Release.wav",
+            'e_alt4': f"{release_dir}/E4_Release.wav",
+            'f4': f"{release_dir}/F4_Release.wav",
+            'f#4': f"{release_dir}/F_sharp4_Release.wav"
             }
 
 # Valve combination to note, subject to change / will have a potientiometer variable in the future
@@ -107,21 +107,34 @@ signal.signal(signal.SIGINT, handle_interrupt)
 
 
 note_sound_dict = {
+    # Attacks
     ('c4','a'): sf.read(f"{sound_attack_dict['c4']}"),
+    ('c#4','a'): sf.read(f"{sound_attack_dict['c#4']}"),
     ('d4','a'): sf.read(f"{sound_attack_dict['d4']}"),
+    ('d#4','a'): sf.read(f"{sound_attack_dict['d#4']}"),
     ('e4','a'): sf.read(f"{sound_attack_dict['e4']}"),
     ('e4_alt','a'): sf.read(f"{sound_attack_dict['e4']}"),
-    # ...
+    ('f4','a'): sf.read(f"{sound_attack_dict['f4']}"),
+    ('f#4','a'): sf.read(f"{sound_attack_dict['f#4']}"),
+    # Sustains
     ('c4','s'): sf.read(f"{sound_sustain_dict['c4']}"),
+    ('c#4','s'): sf.read(f"{sound_sustain_dict['c#4']}"),
     ('d4','s'): sf.read(f"{sound_sustain_dict['d4']}"),
+    ('d#4','s'): sf.read(f"{sound_sustain_dict['d#4']}"),
     ('e4','s'): sf.read(f"{sound_sustain_dict['e4']}"),
     ('e4_alt','s'): sf.read(f"{sound_sustain_dict['e4']}"),
-    # ...
+    ('f4','s'): sf.read(f"{sound_sustain_dict['f4']}"),
+    ('f#4','s'): sf.read(f"{sound_sustain_dict['f#4']}"),
+    # Releases
     ('c4','r'): sf.read(f"{sound_release_dict['c4']}"),
+    ('c#4','r'): sf.read(f"{sound_release_dict['c#4']}"),
     ('d4','r'): sf.read(f"{sound_release_dict['d4']}"),
+    ('d#4','r'): sf.read(f"{sound_release_dict['d#4']}"),
     ('e4','r'): sf.read(f"{sound_release_dict['e4']}"),
     ('e4_alt','r'): sf.read(f"{sound_release_dict['e4']}"),
-    # ...
+    ('f4','r'): sf.read(f"{sound_release_dict['f4']}"),
+    ('f#4','r'): sf.read(f"{sound_release_dict['f#4']}"),
+    # ... more to come
     }
  
 loop_var = 0
@@ -170,7 +183,7 @@ while not interrupt_event.is_set():
         sd.wait()
         # reset variables
         note_name = None
-        old_name = None
+        old_note = None
         loop_var = 0
     
 #final cleanup
