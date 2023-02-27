@@ -104,17 +104,17 @@ signal.signal(signal.SIGINT, handle_interrupt)
  
 # keep sounds in memory
 note_sound_dict = {
-    ('c4','a'): sf.read(f"{sound_attack_dict('c4')}"),
-    ('d4','a'): sf.read(f"{sound_attack_dict('d4')}"),
-    ('e4','a'): sf.read(f"{sound_attack_dict('e4')}"),
+    ('c4','a'): sf.read(f"{sound_attack_dict['c4']}"),
+    ('d4','a'): sf.read(f"{sound_attack_dict['d4']}"),
+    ('e4','a'): sf.read(f"{sound_attack_dict['e4']}"),
     # ...
-    ('c4','s'): sf.read(f"{sound_sustain_dict('c4')}"),
-    ('d4','s'): sf.read(f"{sound_sustain_dict('d4')}"),
-    ('e4','s'): sf.read(f"{sound_sustain_dict('e4')}"),
+    ('c4','s'): sf.read(f"{sound_sustain_dict['c4']}"),
+    ('d4','s'): sf.read(f"{sound_sustain_dict['d4']}"),
+    ('e4','s'): sf.read(f"{sound_sustain_dict['e4']}"),
     # ...
-    ('c4','r'): sf.read(f"{sound_release_dict('c4')}"),
-    ('d4','r'): sf.read(f"{sound_release_dict('d4')}"),
-    ('e4','r'): sf.read(f"{sound_release_dict('e4')}"),
+    ('c4','r'): sf.read(f"{sound_release_dict['c4']}"),
+    ('d4','r'): sf.read(f"{sound_release_dict['d4']}"),
+    ('e4','r'): sf.read(f"{sound_release_dict['e4']}"),
     # ...
     }
  
@@ -151,8 +151,8 @@ while not interrupt_event.is_set():
         sd.wait()
 
     #note release
-    # if there is a note playing
-    if note_name != None:
+    
+    if note_name != None: # if there is a note currently playing
         # play the note release file
         data, samplerate = note_sound_dict[note_name,'s'] # 'r' for release
         volume = get_volume_level()
