@@ -83,11 +83,12 @@ valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): 'c4',
               (GPIO.HIGH,GPIO.LOW,GPIO.HIGH): 'd4',
               (GPIO.LOW,GPIO.HIGH,GPIO.HIGH): 'd#4',
               (GPIO.HIGH,GPIO.HIGH,GPIO.LOW): 'e4',
-              (GPIO.LOW,GPIO.LOW,GPIO.HIGH): 'e_alt4',
+              (GPIO.LOW,GPIO.LOW,GPIO.HIGH): 'e4_alt',
               (GPIO.HIGH,GPIO.LOW,GPIO.LOW): 'f4',
               (GPIO.LOW,GPIO.HIGH,GPIO.LOW): 'f#4'}
 
 note_name = None
+old_note = None
 
 data, samplerate = sf.read("Trumpet_Samples/Sound/C4.wav")
 
@@ -103,18 +104,23 @@ def get_volume_level():
 signal.signal(signal.SIGINT, handle_interrupt)
  
 # keep sounds in memory
+
+
 note_sound_dict = {
     ('c4','a'): sf.read(f"{sound_attack_dict['c4']}"),
     ('d4','a'): sf.read(f"{sound_attack_dict['d4']}"),
     ('e4','a'): sf.read(f"{sound_attack_dict['e4']}"),
+    ('e4_alt','a'): sf.read(f"{sound_attack_dict['e4']}"),
     # ...
     ('c4','s'): sf.read(f"{sound_sustain_dict['c4']}"),
     ('d4','s'): sf.read(f"{sound_sustain_dict['d4']}"),
     ('e4','s'): sf.read(f"{sound_sustain_dict['e4']}"),
+    ('e4_alt','s'): sf.read(f"{sound_sustain_dict['e4']}"),
     # ...
     ('c4','r'): sf.read(f"{sound_release_dict['c4']}"),
     ('d4','r'): sf.read(f"{sound_release_dict['d4']}"),
     ('e4','r'): sf.read(f"{sound_release_dict['e4']}"),
+    ('e4_alt','r'): sf.read(f"{sound_release_dict['e4']}"),
     # ...
     }
  
@@ -126,35 +132,39 @@ while not interrupt_event.is_set():
         # translate the valve combination into the name of the note
         note_name = valve_dict[valves]
         
+        
         # these notes are loaded, but not played yet
         # on the first iteration of the note, play the "attack"
         if loop_var == 0:
             data, samplerate = note_sound_dict[note_name,'a'] # 'a' for attack
             loop_var += 1
             print("Attack Read")
+            sd.play(data, samplerate,blocking=True)
         # on every other iteration of the note, play the "sustain"
         else:
             data, samplerate = note_sound_dict[note_name,'s'] # 's' for sustain
-            print("Sustain Read")
+            print("Sustain Read") # If this print statement is not here, the note underruns and does not sound good. We could also implement a sleep function
             
             
         # set the volume
-        volume = get_volume_level()
+#         volume = get_volume_level()
         
         # integrate volume change to the data
-        data_vol = volume * data
+#         data_vol = volume * data
         
         # this actually plays the note
-        sd.play(data_vol, samplerate)
+            if note_name != old_note:
+                old_note = note_name
+                sd.play(data, samplerate,loop=True)
         
         # wait until the note is complete
-        sd.wait()
+        #sd.wait()
 
-    #note release
+    #note release once mouthpiece is not active,
     
     if note_name != None: # if there is a note currently playing
         # play the note release file
-        data, samplerate = note_sound_dict[note_name,'s'] # 'r' for release
+        data, samplerate = note_sound_dict[note_name,'r'] # 'r' for release
         volume = get_volume_level()
         data_vol = volume * data
         print(f"{note_name} ending")
