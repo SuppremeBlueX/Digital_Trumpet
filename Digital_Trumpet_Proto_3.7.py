@@ -142,18 +142,16 @@ while not interrupt_event.is_set():
             sd.play(data, samplerate,blocking=True)
         # on every other iteration of the note, play the "sustain"
         else:
+            # set the volume
+            volume = get_volume_level()
+            # grab data
             data, samplerate = note_sound_dict[note_name,'s'] # 's' for sustain
+            # integrate volume change to the data
+            data_vol = volume * data 
             print("Sustain Read") # If this print statement is not here, the note underruns and does not sound good. We could also implement a sleep function
-            
-            
-        # set the volume
-#         volume = get_volume_level()
-        
-        # integrate volume change to the data
-#         data_vol = volume * data
-        
         # this actually plays the note
             if note_name != old_note:
+                
                 old_note = note_name
                 sd.play(data, samplerate,loop=True)
         
@@ -172,6 +170,7 @@ while not interrupt_event.is_set():
         sd.wait()
         # reset variables
         note_name = None
+        old_name = None
         loop_var = 0
     
 #final cleanup
