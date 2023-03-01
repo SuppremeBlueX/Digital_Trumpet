@@ -25,22 +25,26 @@ GPIO.setup(valve2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(valve3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(mouthpiece, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
+# Define Instrument
+Instrument = "Trumpet"
 # directories for Trumpet Samples
-sound_dir = "Trumpet_Samples/Sound"
-attack_dir = "Trumpet_Samples/Sound/Attack"
-sustain_dir = "Trumpet_Samples/Sound/Sustain"
-release_dir = "Trumpet_Samples/Sound/Release"
+sound_dir = f"Samples/{Instrument}/Sound"
+attack_dir = f"{sound_dir}/Attack"
+sustain_dir = f"{sound_dir}/Sustain"
+release_dir = f"{sound_dir}/Release"
 
 # sound dictionaries
+# note names here are in the transposition of a Bb trumpet, not concert pitch
+# Any samples of different instruments can either be in its key or its transposition, but specify it!
 sound_dict = {
-            'c4': f"{sound_dir}/C4.wav",
-            'c#4': f"{sound_dir}/C_sharp4.wav",
-            'd4': f"{sound_dir}/D4.wav",
-            'd#4': f"{sound_dir}/D_sharp4.wav",
-            'e4': f"{sound_dir}/E4.wav",
-            'e_alt4': f"{sound_dir}/E4.wav",
-            'f4': f"{sound_dir}/F4.wav",
-            'f#4': f"{sound_dir}/F_sharp4.wav"
+            'c4': f"{sound_dir}/C4.wav", # Concert Bb (also A#)
+            'c#4': f"{sound_dir}/C_sharp4.wav", # Concert B
+            'd4': f"{sound_dir}/D4.wav", # Concert C
+            'd#4': f"{sound_dir}/D_sharp4.wav", # Concert C# (also Db)
+            'e4': f"{sound_dir}/E4.wav", # Concert D
+            'e_alt4': f"{sound_dir}/E4.wav", # Concert D (Alternate fingering)
+            'f4': f"{sound_dir}/F4.wav", # Concert Eb (also D#)
+            'f#4': f"{sound_dir}/F_sharp4.wav" # Concert E
             }
 
 sound_attack_dict = {
