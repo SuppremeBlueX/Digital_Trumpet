@@ -27,8 +27,10 @@ GPIO.setup(mouthpiece, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 # Define Instrument
 Instrument = "Bb_Trumpet"
+# Define Mute: "Unmuted" is the default
+Mute = "Unmuted"
 # directories for Trumpet Samples
-sound_dir = f"Samples/{Instrument}/Sound"
+sound_dir = f"Samples/{Instrument}/{Mute}/Sound"
 attack_dir = f"{sound_dir}/Attack"
 sustain_dir = f"{sound_dir}/Sustain"
 release_dir = f"{sound_dir}/Release"
