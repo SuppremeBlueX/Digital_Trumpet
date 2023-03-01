@@ -26,7 +26,7 @@ GPIO.setup(valve3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(mouthpiece, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 # Define Instrument
-Instrument = "Trumpet"
+Instrument = "Bb_Trumpet"
 # directories for Trumpet Samples
 sound_dir = f"Samples/{Instrument}/Sound"
 attack_dir = f"{sound_dir}/Attack"
@@ -80,7 +80,8 @@ sound_release_dict = {
             'f#4': f"{release_dir}/F_sharp4_Release.wav"
             }
 
-# Valve combination to note, subject to change / will have a potientiometer variable in the future
+# Valve combination to note, subject to change / will have a analog (potentiometer/pressure sensor) 
+# variable in the future
 
 valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): 'c4',
               (GPIO.HIGH,GPIO.HIGH,GPIO.HIGH): 'c#4',
@@ -91,10 +92,9 @@ valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): 'c4',
               (GPIO.HIGH,GPIO.LOW,GPIO.LOW): 'f4',
               (GPIO.LOW,GPIO.HIGH,GPIO.LOW): 'f#4'}
 
+# set some global variables to keep track of the note currently played and the last note played
 note_name = None
 old_note = None
-
-data, samplerate = sf.read("Trumpet_Samples/Sound/C4.wav")
 
 interrupt_event = threading.Event()
 
@@ -108,7 +108,6 @@ def get_volume_level():
 signal.signal(signal.SIGINT, handle_interrupt)
  
 # keep sounds in memory
-
 
 note_sound_dict = {
     # Attacks
