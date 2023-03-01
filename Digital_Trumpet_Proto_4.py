@@ -29,7 +29,7 @@ GPIO.setup(mouthpiece, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 Instrument = "Bb_Trumpet"
 # Define Mute: "Unmuted" is the default
 Mute = "Unmuted"
-# directories for Trumpet Samples
+# Directory: Samples/Instrument/Mute/Sound/
 sound_dir = f"Samples/{Instrument}/{Mute}/Sound"
 attack_dir = f"{sound_dir}/Attack"
 sustain_dir = f"{sound_dir}/Sustain"
@@ -39,13 +39,13 @@ release_dir = f"{sound_dir}/Release"
 # note names here are in the transposition of a Bb trumpet, not concert pitch
 # Any samples of different instruments can either be in its key or its transposition, but specify it!
 sound_dict = {
-            'c4': f"{sound_dir}/C4.wav", # Concert Bb (also A#)
+            'c4': f"{sound_dir}/C4.wav", # Concert A# (also Bb)
             'c#4': f"{sound_dir}/C_sharp4.wav", # Concert B
             'd4': f"{sound_dir}/D4.wav", # Concert C
             'd#4': f"{sound_dir}/D_sharp4.wav", # Concert C# (also Db)
             'e4': f"{sound_dir}/E4.wav", # Concert D
             'e_alt4': f"{sound_dir}/E4.wav", # Concert D (Alternate fingering)
-            'f4': f"{sound_dir}/F4.wav", # Concert Eb (also D#)
+            'f4': f"{sound_dir}/F4.wav", # Concert D# (also Eb)
             'f#4': f"{sound_dir}/F_sharp4.wav" # Concert E
             }
 
@@ -97,20 +97,19 @@ valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): 'c4',
 # set some global variables to keep track of the note currently played and the last note played
 note_name = None
 old_note = None
+loop_var = 0
 
+# Handle interrupt event
 interrupt_event = threading.Event()
-
 def handle_interrupt(signal, frame):
     interrupt_event.set()
-    
-def get_volume_level():
-    # in the future, there will be code to specifically pick up volume, but for now, return 1
-    return 1
-
 signal.signal(signal.SIGINT, handle_interrupt)
+
+# in the future, there will be code to specifically pick up volume, but for now, return 1   
+def get_volume_level():
+    return 1
  
 # keep sounds in memory
-
 note_sound_dict = {
     # Attacks
     ('c4','a'): sf.read(f"{sound_attack_dict['c4']}"),
@@ -139,19 +138,17 @@ note_sound_dict = {
     ('e4_alt','r'): sf.read(f"{sound_release_dict['e4']}"),
     ('f4','r'): sf.read(f"{sound_release_dict['f4']}"),
     ('f#4','r'): sf.read(f"{sound_release_dict['f#4']}"),
-    # ... more to come
+    # ... more notes to come
     }
- 
-loop_var = 0
+# using sf.read() now reads all of the notes and stores them in the dict
+# This is a great spot to write code to replace the dict above with some code to write sampled notes into memory
+
 while not interrupt_event.is_set():
     while GPIO.input(mouthpiece) == GPIO.HIGH:
         # what valve combination do I have?
         valves = (GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
         # translate the valve combination into the name of the note
         note_name = valve_dict[valves]
-        
-        
-        # these notes are loaded, but not played yet
         # on the first iteration of the note, play the "attack"
         if loop_var == 0:
             data, samplerate = note_sound_dict[note_name,'a'] # 'a' for attack
@@ -172,21 +169,16 @@ while not interrupt_event.is_set():
                 
                 old_note = note_name
                 sd.play(data, samplerate,loop=True)
-        
-        # wait until the note is complete
-        #sd.wait()
 
-    #note release once mouthpiece is not active,
-    
+    #note release once mouthpiece is not active,   
     if note_name != None: # if there is a note currently playing
         # play the note release file
         data, samplerate = note_sound_dict[note_name,'r'] # 'r' for release
         volume = get_volume_level()
         data_vol = volume * data
         print(f"{note_name} ending")
-        sd.play(data_vol, samplerate)
-        sd.wait()
-        # reset variables
+        sd.play(data_vol, samplerate,blocking=True)
+        # reset global variables
         note_name = None
         old_note = None
         loop_var = 0
