@@ -166,7 +166,6 @@ while not interrupt_event.is_set():
             print("Sustain Read") # If this print statement is not here, the note underruns and does not sound good. We could also implement a sleep function
         # this actually plays the note
             if note_name != old_note:
-                
                 old_note = note_name
                 sd.play(data, samplerate,loop=True)
 
@@ -185,3 +184,4 @@ while not interrupt_event.is_set():
     
 #final cleanup
 sd.stop()
+GPIO.cleanup()
