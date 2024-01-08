@@ -95,6 +95,7 @@ valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): 'c4',
               (GPIO.LOW,GPIO.HIGH,GPIO.LOW): 'f#4'}
 
 # set some global variables to keep track of the note currently played and the last note played
+# temporary
 note_name = None
 old_note = None
 loop_var = 0
