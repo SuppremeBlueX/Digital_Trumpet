@@ -38,6 +38,8 @@ release_dir = f"{sound_dir}/Release"
 # sound dictionaries
 # note names here are in the transposition of a Bb trumpet, not concert pitch
 # Any samples of different instruments can either be in its key or its transposition, but specify it!
+
+# test dictionary, will not be used in final code
 sound_dict = {
             'c4': f"{sound_dir}/C4.wav", # Concert A# (also Bb)
             'c#4': f"{sound_dir}/C_sharp4.wav", # Concert B
@@ -49,6 +51,7 @@ sound_dict = {
             'f#4': f"{sound_dir}/F_sharp4.wav" # Concert E
             }
 
+#dictionaries to use in the final code
 sound_attack_dict = {
             'c4': f"{attack_dir}/C4_Attack.wav",
             'c#4': f"{attack_dir}/C_sharp4_Attack.wav",
