@@ -89,14 +89,19 @@ sound_release_dict = {
 # Valve combination to note, subject to change / will have a analog (potentiometer/pressure sensor) 
 # variable in the future
 
-simple_valve_dict = {(GPIO.LOW,GPIO.LOW,GPIO.LOW): 'c4',
-              (GPIO.HIGH,GPIO.HIGH,GPIO.HIGH): 'c#4',
-              (GPIO.HIGH,GPIO.LOW,GPIO.HIGH): 'd4',
-              (GPIO.LOW,GPIO.HIGH,GPIO.HIGH): 'd#4',
-              (GPIO.HIGH,GPIO.HIGH,GPIO.LOW): 'e4',
-              (GPIO.LOW,GPIO.LOW,GPIO.HIGH): 'e4_alt',
-              (GPIO.HIGH,GPIO.LOW,GPIO.LOW): 'f4',
-              (GPIO.LOW,GPIO.HIGH,GPIO.LOW): 'f#4'}
+_ = GPIO.HIGH
+T = GPIO.LOW 
+
+simple_valve_dict = {
+            (T,T,T): 'c4',
+            (_,_,_): 'c#4',
+            (_,T,_): 'd4',
+            (T,_,_): 'd#4',
+            (_,_,T): 'e4',
+            (T,T,_): 'e4_alt',
+            (_,T,T): 'f4',
+            (T,_,T): 'f#4'
+            }
 
 # Handle interrupt event
 interrupt_event = threading.Event()
