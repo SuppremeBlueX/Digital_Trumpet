@@ -89,15 +89,46 @@ sound_release_dict = {
 # Valve combination to note, subject to change / will have a analog (potentiometer/pressure sensor) 
 # variable in the future
 
+_ = GPIO.HIGH
+T = GPIO.LOW 
+
 simple_valve_dict = {
-            (GPIO.LOW,GPIO.LOW,GPIO.LOW): 'c4',
-            (GPIO.HIGH,GPIO.HIGH,GPIO.HIGH): 'c#4',
-            (GPIO.HIGH,GPIO.LOW,GPIO.HIGH): 'd4',
-            (GPIO.LOW,GPIO.HIGH,GPIO.HIGH): 'd#4',
-            (GPIO.HIGH,GPIO.HIGH,GPIO.LOW): 'e4',
-            (GPIO.LOW,GPIO.LOW,GPIO.HIGH): 'e4_alt',
-            (GPIO.HIGH,GPIO.LOW,GPIO.LOW): 'f4',
-            (GPIO.LOW,GPIO.HIGH,GPIO.LOW): 'f#4'}
+            (T,T,T): 'c4',
+            (_,_,_): 'c#4',
+            (_,T,_): 'd4',
+            (T,_,_): 'd#4',
+            (_,_,T): 'e4',
+            (T,T,_): 'e4_alt',
+            (_,T,T): 'f4',
+            (T,_,T): 'f#4'
+            }
+
+advanced_valve_dict = {
+            (reg_0,_,_,_): 'f#3',
+            (reg_0,_,T,_): 'g3',
+            (reg_0,T,_,_): 'g#3',
+            (reg_0,_,_,T): 'a3',
+            (reg_0,T,T,_): 'a3_alt',
+            (reg_0,_,T,T): 'a#3',
+            (reg_0,T,_,T): 'b3',
+            (reg_1,T,T,T): 'c4',
+            (reg_1,_,_,_): 'c#4',
+            (reg_1,_,T,_): 'd4',
+            (reg_1,T,_,_): 'd#4',
+            (reg_1,_,_,T): 'e4',
+            (reg_1,T,T,_): 'e4_alt',
+            (reg_1,_,T,T): 'f4',
+            (reg_1,T,_,T): 'f#4',
+            (reg_2,_,_,_): 'f#4_alt',
+            (reg_2,T,T,T): 'g4',
+            (reg_2,_,T,_): 'g4_alt',
+            (reg_2,T,_,_): 'g#4',
+            (reg_2,_,_,T): 'a4',
+            (reg_2,T,T,_): 'a4_alt',
+            (reg_2,_,T,T): 'a#4',
+            (reg_2,T,_,T): 'b4'
+            }
+
 
 # Handle interrupt event
 interrupt_event = threading.Event()
@@ -108,6 +139,12 @@ signal.signal(signal.SIGINT, handle_interrupt)
 # in the future, there will be code to specifically pick up volume, but for now, return 1   
 def get_volume_level():
     return 4
+
+def change_octave(directon,note):
+    if directon != "Upper" or "Lower":
+        raise Exception
+
+
 
 while not interrupt_event.is_set():
     # set some variables to keep track of the note currently played and the last note played
