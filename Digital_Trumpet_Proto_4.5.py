@@ -150,7 +150,7 @@ signal.signal(signal.SIGINT, handle_interrupt)
 def get_volume_level():
     return 4
 
-def change_octave(direction, note):
+def change_octave(direction, note): # this function converts a note to another based on octave direction
       note_num = note.split('_')[0][-1]
       if direction == "Upper":
             updated_note_num = str(int(note_num) + 1)
@@ -162,6 +162,8 @@ def change_octave(direction, note):
       
       return updated_note
 
+def transpose(original_key, new_key, note): # might play with this later
+      return None
 
 
 while not interrupt_event.is_set():
