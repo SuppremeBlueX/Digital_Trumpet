@@ -20,11 +20,17 @@ valve2 = 8 # (GPIO 8)
 valve3 = 25 # (GPIO 25)
 mouthpiece = 1 # (GPIO 1)
 
+upper_octave = 2 # (GPIO 2)
+lower_octave = 3 # (GPIO 3)
+
 # GPIO setup
 GPIO.setup(valve1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(valve2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(valve3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(mouthpiece, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+GPIO.setup(upper_octave, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(lower_octave, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 # Define Instrument
 Instrument = "Bb_Trumpet"
@@ -144,9 +150,16 @@ signal.signal(signal.SIGINT, handle_interrupt)
 def get_volume_level():
     return 4
 
-def change_octave(directon,note):
-    if directon != "Upper" or "Lower":
-        raise Exception
+def change_octave(direction, note):
+      note_num = note.split('_')[0][-1]
+      if direction == "Upper":
+            updated_note_num = str(int(note_num) + 1)
+      elif direction == "Lower":
+            updated_note_num = str(int(note_num) - 1)
+      else:
+            raise Exception
+      updated_note = note.replace(note_num,updated_note_num)
+      return updated_note
 
 
 
