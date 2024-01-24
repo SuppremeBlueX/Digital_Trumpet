@@ -158,7 +158,8 @@ def change_octave(direction, note):
             updated_note_num = str(int(note_num) - 1)
       else:
             raise Exception
-      updated_note = note.replace(note_num,updated_note_num)
+      updated_note = (note.replace(note_num,updated_note_num)).split("_"[0])
+      
       return updated_note
 
 
