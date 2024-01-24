@@ -91,6 +91,10 @@ sound_release_dict = {
 
 _ = GPIO.HIGH
 T = GPIO.LOW 
+reg_0 = None
+reg_1 = None
+reg_2 = None
+slurred = True
 
 simple_valve_dict = {
             (T,T,T): 'c4',
@@ -157,11 +161,11 @@ while not interrupt_event.is_set():
         # translate the valve combination into the name of the note
         note_name = simple_valve_dict[valves]
         # on the first iteration of the note, play the "attack"
-        if loop_var == 0:
+        if (loop_var == 0 and slurred == False) and (old_note == None):
+            old_note = note_name
             data, samplerate = sf.read(sound_attack_dict[note_name])
             data_vol = get_volume_level() * data 
             loop_var += 1
-            print("Attack Read")
             sd.play(data_vol, samplerate,blocking=True)
         # on every other iteration of the note, play the "sustain"
         else:
@@ -169,7 +173,6 @@ while not interrupt_event.is_set():
             data, samplerate = sf.read(sound_sustain_dict[note_name])
             # integrate volume change to the data
             data_vol = get_volume_level() * data 
-            print("Sustain Read") # If this print statement is not here, the note underruns and does not sound good. We could also implement a sleep function. Not sure why this is happening
         # this actually plays the note
             if note_name != old_note:
                 old_note = note_name
@@ -177,11 +180,12 @@ while not interrupt_event.is_set():
 
     # note release once mouthpiece is not active,   
     if note_name != None: # if there is a note currently playing
+          
         # play the note release file
         data, samplerate = sf.read(sound_release_dict[note_name])
         data_vol = get_volume_level() * data
-        print(f"{note_name} ending")
         sd.play(data_vol, samplerate,blocking=True)
+        
         # reset variables
         note_name = None
         old_note = None
