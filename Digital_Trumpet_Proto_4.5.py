@@ -92,15 +92,15 @@ sound_release_dict = {
             'f#4': f"{release_dir}/F_sharp4_Release.wav"
             }
 
-# Valve combination to note, subject to change / will have a analog (potentiometer/pressure sensor) 
-# variable in the future
-
 _ = GPIO.HIGH
 T = GPIO.LOW 
 reg_0 = None
 reg_1 = None
 reg_2 = None
 slurred = True
+
+# Valve combination to note, subject to change / will have a analog (potentiometer/pressure sensor) 
+# variable in the future
 
 simple_valve_dict = {
             (T,T,T): 'c4',
