@@ -170,18 +170,16 @@ while not interrupt_event.is_set():
     # set some variables to keep track of the note currently played and the last note played
     note_name = None
     old_note = None
-    loop_var = 0
     while GPIO.input(mouthpiece) == GPIO.HIGH:
         # what valve combination do I have?
         valves = (GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
         # translate the valve combination into the name of the note
         note_name = simple_valve_dict[valves]
         # on the first iteration of the note, play the "attack"
-        if (loop_var == 0 and slurred == False) and (old_note == None):
+        if (old_note == None):
             old_note = note_name
             data, samplerate = sf.read(sound_attack_dict[note_name])
-            data_vol = get_volume_level() * data 
-            loop_var += 1
+            data_vol = get_volume_level() * data
             sd.play(data_vol, samplerate,blocking=True)
         # on every other iteration of the note, play the "sustain"
         else:
@@ -189,7 +187,7 @@ while not interrupt_event.is_set():
             data, samplerate = sf.read(sound_sustain_dict[note_name])
             # integrate volume change to the data
             data_vol = get_volume_level() * data 
-        # this actually plays the note
+            # this actually plays the note
             if note_name != old_note:
                 old_note = note_name
                 sd.play(data_vol, samplerate,loop=True)
