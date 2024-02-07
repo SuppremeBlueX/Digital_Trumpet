@@ -27,6 +27,14 @@ reg_0 = 21
 reg_1 = 20
 reg_2 = 16
 reg_3 = 12
+reg_4 = None
+reg_5 = None
+reg_6 = None
+reg_7 = None
+reg_8 = None
+reg_9 = None
+reg_10 = None
+reg_11 = None
 
 # GPIO setup
 GPIO.setup(valve1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -106,10 +114,7 @@ sound_release_dict = {
             }
 
 _ = GPIO.HIGH
-T = GPIO.LOW 
-reg_0 = None
-reg_1 = None
-reg_2 = None
+T = GPIO.LOW
 slurred = True
 
 # Valve combination to note, subject to change / will have a analog (potentiometer/pressure sensor) 
@@ -127,29 +132,42 @@ simple_valve_dict = {
             }
 
 advanced_valve_dict = {
-            (reg_0,_,_,_): 'f#3',
-            (reg_0,_,T,_): 'g3',
-            (reg_0,T,_,_): 'g#3',
-            (reg_0,_,_,T): 'a3',
-            (reg_0,T,T,_): 'a3_alt',
-            (reg_0,_,T,T): 'a#3',
-            (reg_0,T,_,T): 'b3',
-            (reg_1,T,T,T): 'c4',
-            (reg_1,_,_,_): 'c#4',
-            (reg_1,_,T,_): 'd4',
-            (reg_1,T,_,_): 'd#4',
-            (reg_1,_,_,T): 'e4',
-            (reg_1,T,T,_): 'e4_alt',
-            (reg_1,_,T,T): 'f4',
-            (reg_1,T,_,T): 'f#4',
-            (reg_2,_,_,_): 'f#4_alt',
-            (reg_2,T,T,T): 'g4',
-            (reg_2,_,T,_): 'g4_alt',
-            (reg_2,T,_,_): 'g#4',
-            (reg_2,_,_,T): 'a4',
-            (reg_2,T,T,_): 'a4_alt',
-            (reg_2,_,T,T): 'a#4',
-            (reg_2,T,_,T): 'b4'
+            ('reg_0',_,_,_): 'f#3',
+            ('reg_0',_,T,_): 'g3',
+            ('reg_0',T,_,_): 'g#3',
+            ('reg_0',_,_,T): 'a3',
+            ('reg_0',T,T,_): 'a3_alt',
+            ('reg_0',_,T,T): 'a#3',
+            ('reg_0',T,_,T): 'b3',
+            ('reg_1',T,T,T): 'c4',
+            ('reg_1',_,_,_): 'c#4',
+            ('reg_1',_,T,_): 'd4',
+            ('reg_1',T,_,_): 'd#4',
+            ('reg_1',_,_,T): 'e4',
+            ('reg_1',T,T,_): 'e4_alt',
+            ('reg_1',_,T,T): 'f4',
+            ('reg_1',T,_,T): 'f#4',
+            ('reg_2',_,_,_): 'f#4_alt',
+            ('reg_2',T,T,T): 'g4',
+            ('reg_2',_,T,_): 'g4_alt',
+            ('reg_2',T,_,_): 'g#4',
+            ('reg_2',_,_,T): 'a4',
+            ('reg_2',T,T,_): 'a4_alt',
+            ('reg_2',_,T,T): 'a#4',
+            ('reg_2',T,_,T): 'b4',
+            ('reg_3',T,T,T): 'c5',
+            ('reg_3',_,_,T): 'c#5',
+            ('reg_3',_,T,T): 'd5',
+            ('reg_3',T,_,T): 'd#5',
+            ('reg_4',T,T,T): 'e5',
+            ('reg_4',_,T,T): 'f5',
+            ('reg_4',T,_,T): 'f#5',
+            ('reg_5',T,T,T): 'g5',
+            ('reg_5',T,_,_): 'g#5',
+            ('reg_5',_,_,T): 'a5',
+            ('reg_5',_,T,T): 'a#5',
+            ('reg_5',T,_,T): 'b5',
+            ('reg_6',T,T,T): 'c6'
             }
 
 
@@ -175,7 +193,36 @@ def change_octave(direction, note): # this function converts a note to another b
       
       return updated_note
 
+def check_register(): # I'm essentially making this function as a switch-case
+      if GPIO.input(reg_0) == GPIO.HIGH:
+            return 'reg_0'
+      elif GPIO.input(reg_1) == GPIO.HIGH:
+            return 'reg_1'
+      elif GPIO.input(reg_2) == GPIO.HIGH:
+            return 'reg_2'
+      elif GPIO.input(reg_3) == GPIO.HIGH:
+            return 'reg_3'
+      elif GPIO.input(reg_4) == GPIO.HIGH:
+            return 'reg_4'
+      elif GPIO.input(reg_5) == GPIO.HIGH:
+            return 'reg_5'
+      elif GPIO.input(reg_6) == GPIO.HIGH:
+            return 'reg_6'
+      elif GPIO.input(reg_7) == GPIO.HIGH:
+            return 'reg_7'
+      elif GPIO.input(reg_8) == GPIO.HIGH:
+            return 'reg_8'
+      elif GPIO.input(reg_9) == GPIO.HIGH:
+            return 'reg_9'
+      elif GPIO.input(reg_10) == GPIO.HIGH:
+            return 'reg_10'
+      elif GPIO.input(reg_11) == GPIO.HIGH:
+            return 'reg_11'
+      else:
+            return None
+
 def transpose(original_key, new_key, note): # might play with this later
+      key_list = ['C','C#','Db','D','D#','Eb','E','F','F#','Gb','G','G#','Ab','A','A#','Bb','B']
       return None
 
 note_name = None
@@ -188,8 +235,14 @@ while not interrupt_event.is_set():
     while GPIO.input(mouthpiece) == GPIO.HIGH:
         # what valve combination do I have?
         valves = (GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
+        vw_reg = (check_register(), GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
+        register = vw_reg[0]
         # translate the valve combination into the name of the note
-        note_name = simple_valve_dict[valves]
+        if register == None:
+              note_name = simple_valve_dict[valves]
+        else:
+              note_name = advanced_valve_dict[vw_reg]
+      
         # on the first iteration of the note, play the "attack"
         if old_note == None or slurred == False:
             old_note = note_name
@@ -225,8 +278,7 @@ sd.stop()
 GPIO.cleanup()
 
 
-'''
-Notes:
+''' Notes:
 1-22-24: Finally realized why my project isn't working, you don't ground buttons...
 
 looking into adding more registers. Looking at 8-way rotary switch right now.
@@ -246,5 +298,9 @@ having a problem with the first note not being played (the sustain, the attack i
 Got it... I needed an AND instead of an OR...
 
 1-31-24: I guess I didn't get it? I don't know why this isn't working properly anymore... There might be something wrong with how I'm implementing the variable.
+
+2-5-24: The problem is still not fully solved, but that problem is isolated there. It won't affect the rest of my program. I need to implement a switch-case to check which input is on
+
+Too bad Python doesn't have switch-cases... oh well... functions will work
 
 '''
