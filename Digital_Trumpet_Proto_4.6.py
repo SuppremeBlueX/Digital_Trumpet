@@ -81,36 +81,39 @@ sound_dict = {
 
 #dictionaries to use in the final code
 sound_attack_dict = {
+            'f#3': f"{attack_dir}/F#3_Attack.wav",
             'c4': f"{attack_dir}/C4_Attack.wav",
-            'c#4': f"{attack_dir}/C_sharp4_Attack.wav",
+            'c#4': f"{attack_dir}/C#4_Attack.wav",
             'd4': f"{attack_dir}/D4_Attack.wav",
-            'd#4': f"{attack_dir}/D_sharp4_Attack.wav",
+            'd#4': f"{attack_dir}/D#4_Attack.wav",
             'e4': f"{attack_dir}/E4_Attack.wav",
             'e4_alt': f"{attack_dir}/E4_Attack.wav",
             'f4': f"{attack_dir}/F4_Attack.wav",
-            'f#4': f"{attack_dir}/F_sharp4_Attack.wav"
+            'f#4': f"{attack_dir}/F#4_Attack.wav"
               }
 
 sound_sustain_dict = {
+            'f#3': f"{attack_dir}/F#3_Sustain.wav",
             'c4': f"{sustain_dir}/C4_Sustain.wav",
-            'c#4': f"{sustain_dir}/C_sharp4_Sustain.wav",
+            'c#4': f"{sustain_dir}/C#4_Sustain.wav",
             'd4': f"{sustain_dir}/D4_Sustain.wav",
-            'd#4': f"{sustain_dir}/D_sharp4_Sustain.wav",
+            'd#4': f"{sustain_dir}/D#4_Sustain.wav",
             'e4': f"{sustain_dir}/E4_Sustain.wav",
             'e4_alt': f"{sustain_dir}/E4_Sustain.wav",
             'f4': f"{sustain_dir}/F4_Sustain.wav",
-            'f#4': f"{sustain_dir}/F_sharp4_Sustain.wav"
+            'f#4': f"{sustain_dir}/F#4_Sustain.wav"
               }
 
 sound_release_dict = {
+            'f#3': f"{attack_dir}/F#3_Release.wav",
             'c4': f"{release_dir}/C4_Release.wav",
-            'c#4': f"{release_dir}/C_sharp4_Release.wav",
+            'c#4': f"{release_dir}/C#4_Release.wav",
             'd4': f"{release_dir}/D4_Release.wav",
-            'd#4': f"{release_dir}/D_sharp4_Release.wav",
+            'd#4': f"{release_dir}/D#4_Release.wav",
             'e4': f"{release_dir}/E4_Release.wav",
             'e4_alt': f"{release_dir}/E4_Release.wav",
             'f4': f"{release_dir}/F4_Release.wav",
-            'f#4': f"{release_dir}/F_sharp4_Release.wav"
+            'f#4': f"{release_dir}/F#4_Release.wav"
             }
 
 _ = GPIO.HIGH
