@@ -27,11 +27,11 @@ reg_0 = 21
 reg_1 = 20
 reg_2 = 16
 reg_3 = 12
-reg_4 = None
-reg_5 = None
-reg_6 = None
-reg_7 = None
-reg_8 = None
+reg_4 = 24
+reg_5 = 23
+reg_6 = 18
+reg_7 = 15
+reg_8 = 14
 reg_9 = None
 reg_10 = None
 reg_11 = None
@@ -51,6 +51,11 @@ GPIO.setup(reg_0, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(reg_1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(reg_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(reg_3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(reg_4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(reg_5, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(reg_6, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(reg_7, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(reg_8, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 
 # Define Instrument
@@ -67,110 +72,76 @@ release_dir = f"{sound_dir}/Release"
 # note names here are in the transposition of a Bb trumpet, not concert pitch
 # Any samples of different instruments can either be in its key or its transposition, but specify it!
 
-# test dictionary, will not be used in final code
-sound_dict = {
-            'c4': f"{sound_dir}/C4.wav", # Concert A# (also Bb)
-            'c#4': f"{sound_dir}/C_sharp4.wav", # Concert B
-            'd4': f"{sound_dir}/D4.wav", # Concert C
-            'd#4': f"{sound_dir}/D_sharp4.wav", # Concert C# (also Db)
-            'e4': f"{sound_dir}/E4.wav", # Concert D
-            'e4_alt': f"{sound_dir}/E4.wav", # Concert D (Alternate fingering)
-            'f4': f"{sound_dir}/F4.wav", # Concert D# (also Eb)
-            'f#4': f"{sound_dir}/F_sharp4.wav" # Concert E
-            }
+# This function will replace the lengthy dictionary I previously had
+def sound_file_search(note, sec):
+      note = note.split('_')[0] # turns 'E4_Alt' into 'E4', etc.
+      if sec == "a":
+            return f"{sound_dir}/Attack/{note}_Attack.wav"
+      elif sec == "s":
+            return f"{sound_dir}/Sustain/{note}_Sustain.wav"
+      elif sec == "r":
+            return f"{sound_dir}/Release/{note}_Release.wav"
+      else:
+            raise ValueError('You didn\'t correctly specify which part of the sound to play. Expected: \'a\',\'s\', or \'r\' ')
 
-#dictionaries to use in the final code
-sound_attack_dict = {
-            'f#3': f"{attack_dir}/F#3_Attack.wav",
-            'c4': f"{attack_dir}/C4_Attack.wav",
-            'c#4': f"{attack_dir}/C#4_Attack.wav",
-            'd4': f"{attack_dir}/D4_Attack.wav",
-            'd#4': f"{attack_dir}/D#4_Attack.wav",
-            'e4': f"{attack_dir}/E4_Attack.wav",
-            'e4_alt': f"{attack_dir}/E4_Attack.wav",
-            'f4': f"{attack_dir}/F4_Attack.wav",
-            'f#4': f"{attack_dir}/F#4_Attack.wav"
-              }
-
-sound_sustain_dict = {
-            'f#3': f"{attack_dir}/F#3_Sustain.wav",
-            'c4': f"{sustain_dir}/C4_Sustain.wav",
-            'c#4': f"{sustain_dir}/C#4_Sustain.wav",
-            'd4': f"{sustain_dir}/D4_Sustain.wav",
-            'd#4': f"{sustain_dir}/D#4_Sustain.wav",
-            'e4': f"{sustain_dir}/E4_Sustain.wav",
-            'e4_alt': f"{sustain_dir}/E4_Sustain.wav",
-            'f4': f"{sustain_dir}/F4_Sustain.wav",
-            'f#4': f"{sustain_dir}/F#4_Sustain.wav"
-              }
-
-sound_release_dict = {
-            'f#3': f"{attack_dir}/F#3_Release.wav",
-            'c4': f"{release_dir}/C4_Release.wav",
-            'c#4': f"{release_dir}/C#4_Release.wav",
-            'd4': f"{release_dir}/D4_Release.wav",
-            'd#4': f"{release_dir}/D#4_Release.wav",
-            'e4': f"{release_dir}/E4_Release.wav",
-            'e4_alt': f"{release_dir}/E4_Release.wav",
-            'f4': f"{release_dir}/F4_Release.wav",
-            'f#4': f"{release_dir}/F#4_Release.wav"
-            }
 
 _ = GPIO.HIGH
 T = GPIO.LOW
-slurred = True
 
 # Valve combination to note, subject to change / will have a analog (potentiometer/pressure sensor) 
 # variable in the future
 
 simple_valve_dict = {
-            (T,T,T): 'c4',
-            (_,_,_): 'c#4',
-            (_,T,_): 'd4',
-            (T,_,_): 'd#4',
-            (_,_,T): 'e4',
-            (T,T,_): 'e4_alt',
-            (_,T,T): 'f4',
-            (T,_,T): 'f#4'
+            (T,T,T): 'C4',
+            (_,_,_): 'C#4',
+            (_,T,_): 'D4',
+            (T,_,_): 'D#4',
+            (_,_,T): 'E4',
+            (T,T,_): 'E4_alt',
+            (_,T,T): 'F4',
+            (T,_,T): 'F#4'
             }
 
 advanced_valve_dict = {
-            ('reg_0',_,_,_): 'f#3',
-            ('reg_0',_,T,_): 'g3',
-            ('reg_0',T,_,_): 'g#3',
-            ('reg_0',_,_,T): 'a3',
-            ('reg_0',T,T,_): 'a3_alt',
-            ('reg_0',_,T,T): 'a#3',
-            ('reg_0',T,_,T): 'b3',
-            ('reg_1',T,T,T): 'c4',
-            ('reg_1',_,_,_): 'c#4',
-            ('reg_1',_,T,_): 'd4',
-            ('reg_1',T,_,_): 'd#4',
-            ('reg_1',_,_,T): 'e4',
-            ('reg_1',T,T,_): 'e4_alt',
-            ('reg_1',_,T,T): 'f4',
-            ('reg_1',T,_,T): 'f#4',
+            ('reg_0',_,_,_): 'F#3',
+            ('reg_0',_,T,_): 'G3',
+            ('reg_0',T,_,_): 'G#3',
+            ('reg_0',_,_,T): 'A3',
+            ('reg_0',T,T,_): 'A3_alt',
+            ('reg_0',_,T,T): 'A#3',
+            ('reg_0',T,_,T): 'B3',
+            ('reg_1',T,T,T): 'C4',
+            ('reg_1',_,_,_): 'C#4',
+            ('reg_1',_,T,_): 'D4',
+            ('reg_1',T,_,_): 'D#4',
+            ('reg_1',_,_,T): 'E4',
+            ('reg_1',T,T,_): 'E4_alt',
+            ('reg_1',_,T,T): 'F4',
+            ('reg_1',T,_,T): 'F#4',
             ('reg_2',_,_,_): 'f#4_alt',
-            ('reg_2',T,T,T): 'g4',
-            ('reg_2',_,T,_): 'g4_alt',
-            ('reg_2',T,_,_): 'g#4',
-            ('reg_2',_,_,T): 'a4',
-            ('reg_2',T,T,_): 'a4_alt',
-            ('reg_2',_,T,T): 'a#4',
-            ('reg_2',T,_,T): 'b4',
-            ('reg_3',T,T,T): 'c5',
-            ('reg_3',_,_,T): 'c#5',
-            ('reg_3',_,T,T): 'd5',
-            ('reg_3',T,_,T): 'd#5',
-            ('reg_4',T,T,T): 'e5',
-            ('reg_4',_,T,T): 'f5',
-            ('reg_4',T,_,T): 'f#5',
-            ('reg_5',T,T,T): 'g5',
-            ('reg_5',T,_,_): 'g#5',
-            ('reg_5',_,_,T): 'a5',
-            ('reg_5',_,T,T): 'a#5',
-            ('reg_5',T,_,T): 'b5',
-            ('reg_6',T,T,T): 'c6'
+            ('reg_2',T,T,T): 'G4',
+            ('reg_2',_,T,_): 'G4_alt',
+            ('reg_2',T,_,_): 'G#4',
+            ('reg_2',_,_,T): 'A4',
+            ('reg_2',T,T,_): 'A4_alt',
+            ('reg_2',_,T,T): 'A#4',
+            ('reg_2',T,_,T): 'B4',
+            ('reg_3',T,T,T): 'C5',
+            ('reg_3',_,_,T): 'C#5',
+            ('reg_3',_,T,T): 'D5',
+            ('reg_3',T,_,T): 'D#5',
+            ('reg_4',T,T,T): 'E5',
+            ('reg_4',_,T,T): 'F5',
+            ('reg_4',T,_,T): 'F#5',
+            ('reg_5',T,T,T): 'G5',
+            ('reg_5',T,_,_): 'G#5',
+            ('reg_5',_,_,T): 'A5',
+            ('reg_5',_,T,T): 'A#5',
+            ('reg_5',T,_,T): 'B5',
+            ('reg_6',T,T,T): 'C6',
+            ('reg_6',_,_,T): 'C#6',
+            ('reg_6',_,T,T): 'D6',
+            ('reg_6',T,_,T): 'D#6',
             }
 
 
@@ -191,7 +162,7 @@ def change_octave(direction, note): # this function converts a note to another b
       elif direction == "Lower":
             updated_note_num = str(int(note_num) - 1)
       else:
-            raise Exception
+            raise ValueError('The first parameter has to be either \'Upper\' or \'Lower\'')
       updated_note = (note.replace(note_num,updated_note_num)).split("_"[0])
       
       return updated_note
@@ -228,6 +199,7 @@ def transpose(original_key, new_key, note): # might play with this later
       key_list = ['C','C#','Db','D','D#','Eb','E','F','F#','Gb','G','G#','Ab','A','A#','Bb','B']
       return None
 
+loop_var = 0
 note_name = None
 old_note = None
 while not interrupt_event.is_set():
@@ -247,29 +219,32 @@ while not interrupt_event.is_set():
               note_name = advanced_valve_dict[vw_reg]
       
         # on the first iteration of the note, play the "attack"
-        if old_note == None or slurred == False:
-            old_note = note_name
-            data, samplerate = sf.read(sound_attack_dict[note_name])
+        if loop_var == 0:
+            data, samplerate = sf.read(sound_file_search(note_name,'a'))
             data_vol = get_volume_level() * data
             sd.play(data_vol, samplerate,blocking=True)
+            print(f"{note_name} Attack")
         # on every other iteration of the note, play the "sustain"
         else:
             # grab data
-            data, samplerate = sf.read(sound_sustain_dict[note_name])
+            data, samplerate = sf.read(sound_file_search(note_name,'s'))
             # integrate volume change to the data
             data_vol = get_volume_level() * data 
             # this actually plays the note
             if note_name != old_note:
                 old_note = note_name
                 sd.play(data_vol, samplerate,loop=True)
+                print(f"{note_name} Sustain")
+        loop_var = loop_var + 1
 
     # note release once mouthpiece is not active,   
     if note_name != None: # if there is a note currently playing
           
         # play the note release file
-        data, samplerate = sf.read(sound_release_dict[note_name])
+        data, samplerate = sf.read(sound_file_search(note_name,'r'))
         data_vol = get_volume_level() * data
         sd.play(data_vol, samplerate,blocking=True)
+        print(f"{note_name} Release")
         
         # reset variables
         note_name = None
@@ -305,5 +280,11 @@ Got it... I needed an AND instead of an OR...
 2-5-24: The problem is still not fully solved, but that problem is isolated there. It won't affect the rest of my program. I need to implement a switch-case to check which input is on
 
 Too bad Python doesn't have switch-cases... oh well... functions will work
+
+2-12-24: Ok, I removed the problem. I was unneccesarily assigning a variable that made it so that my condition to play a sustained note will never play the first time.
+
+Also, I removed the slurred variable. It's technically how you push the button that determines it. Holding the button slurs the notes, while pressing it tounges the note.
+
+The audio_split code is ok, I got lucky with A#3, but the flaws are more obvious with others, where the wavelengths are not really lined up.
 
 '''
