@@ -153,7 +153,7 @@ signal.signal(signal.SIGINT, handle_interrupt)
 
 # in the future, there will be code to specifically pick up volume, but for now, return 1   
 def get_volume_level():
-    return 4
+    return 1
 
 def change_octave(direction, note): # this function converts a note to another based on octave direction
       note_num = note.split('_')[0][-1]
