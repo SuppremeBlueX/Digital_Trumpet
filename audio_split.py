@@ -6,11 +6,24 @@ mute = "Unmuted"
 
 def sample_sustain(sound):
 	max_amplitude = sound.max
-	frequency = max_amplitude / 27 # I might need to be more exact than this (26.8 maybe?)
-	wavelength = 1 / frequency
-	duration = wavelength * 10 # * (# of wavelengths)
-	dur_ms = duration * 1000 # duration is in seconds, change it to milliseconds
-	extract = sound[300:300+dur_ms] # difference of about 10x wavelength
+	#soundleft, soundright = sound.split_to_mono()
+	samples = sound.get_array_of_samples()
+	peaked = False
+	peak = 0
+	percent = 0.9
+	for start, sample in enumerate(samples):
+		if sample >= (percent * max_amplitude):
+			if peaked == False:      
+				peak = peak + 1
+				peaked = True
+		else:
+			peaked = False
+
+	for end, sample in enumerate(reversed(samples)):
+		if sample >= (percent * max_amplitude):
+			break
+	print(peak)
+	extract = sound._spawn(samples[start:-end]) # negate end because we're counting from the end
 	extract.export(f"Samples/{instrument}/{mute}/Sound/Sustain/{file_name}_Sustain.wav", format="wav")
 	return None
 	
