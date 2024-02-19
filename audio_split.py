@@ -4,13 +4,12 @@ instrument = "Bb_Trumpet"
 mute = "Unmuted"
 
 
-def sample_sustain(sound):
+def count_peaks_in_sample(percent):
 	max_amplitude = sound.max
 	#soundleft, soundright = sound.split_to_mono()
 	samples = sound.get_array_of_samples()
 	peaked = False
 	peak = 0
-	percent = 0.9
 	for start, sample in enumerate(samples):
 		if sample >= (percent * max_amplitude):
 			if peaked == False:      
@@ -22,8 +21,39 @@ def sample_sustain(sound):
 	for end, sample in enumerate(reversed(samples)):
 		if sample >= (percent * max_amplitude):
 			break
-	print(peak)
-	extract = sound._spawn(samples[start:-end]) # negate end because we're counting from the end
+	print(f"Number of Peaks within {percent*100}% of max amplitude in Sample: {peak}")
+	return peak
+	
+def separate_by_peaks(sound, percent,peak_break):
+	max_amplitude = sound.max
+	samples = sound.get_array_of_samples()
+	peaked = False
+	peak = 0
+	start_index = 0
+	end_index = 0
+	sustain_size = 0.1
+	sustain_sample = 44100 * sustain_size # 44,100 khz * sound duration
+	if peak_break > count_peaks_in_sample(percent):
+		samples, start_index, end_index = separate_by_peaks(sound,percent-0.01,0)
+	for index, sample in enumerate(samples):
+		if sample >= (percent * max_amplitude):
+			if peaked == False:   
+				peak = peak + 1
+				peaked = True
+				if peak == peak_break:
+					start_index = index
+				if (start_index > 0) and (index - start_index >= sustain_sample): # wait until start_index is set before checking for the end_index
+					end_index = index
+					break
+		else:
+			peaked = False
+	if end_index == 0:
+		samples, start_index, end_index = separate_by_peaks(sound,percent,peak_break+1)
+	return samples, start_index, end_index
+
+def sample_sustain(sound):
+	samples, start_index, end_index = separate_by_peaks(sound,0.9,1)
+	extract = sound._spawn(samples[start_index:end_index]) # negate end because we're counting from the end
 	extract.export(f"Samples/{instrument}/{mute}/Sound/Sustain/{file_name}_Sustain.wav", format="wav")
 	return None
 	
@@ -53,9 +83,6 @@ start_trim = detect_silence(sound)
 end_trim = detect_silence(sound.reverse())
 
 sound = sound[start_trim:len(sound)-end_trim]
-
-print(f"Max = {sound.max}")
-print(f"Normalized = {sound.normalize()}")
 
 sample_sustain(sound)
 sample_attack(sound)
