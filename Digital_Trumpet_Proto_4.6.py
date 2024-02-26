@@ -287,4 +287,8 @@ Also, I removed the slurred variable. It's technically how you push the button t
 
 The audio_split code is ok, I got lucky with A#3, but the flaws are more obvious with others, where the wavelengths are not really lined up.
 
+2-26-24: Breakthrough! I have finally (after discussing with Prof O to help me with the logic) figured out how to detect 'peaks'. With this function, I have a list of locations
+
+of peaks which I can use to slice the sound files into (hopefully) perfect slices without any wavering in the noise.
+
 '''
