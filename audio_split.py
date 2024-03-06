@@ -38,7 +38,7 @@ def separate_by_peaks(sound, percent,peak_break):
 	for index, sample in enumerate(samples):
 		if sample >= (percent * max_amplitude): 
 			print (peak, index, sample)
-			samples[index] = min(sample*2,(2**15)-1)
+			# samples[index] = min(sample*2,(2**15)-1)
 			if peaked == False:   # the sound peaked
 				peak = peak + 1
 				peaked = True
@@ -57,7 +57,6 @@ def locate_peaks(sound):
 	peak = 0
 	peaks = []
 	peaking = False
-	max_amplitude = sound.max
 	samples = sound.get_array_of_samples()
 	for index, sample in enumerate(samples):
 		if index % 2 == 0:
@@ -73,14 +72,16 @@ def locate_peaks(sound):
 			elif sample < 0 and peaking == True:
 				peaking = False
 	return samples, peaks
-
-
+	
+def find_indices(sound,peaks):
+	return None, None
+		
 
 def sample_sustain(sound):
-	#samples, start_index, end_index = separate_by_peaks(sound,0.2,1)
 	samples, peaks = locate_peaks(sound)
 	print (len(peaks))
-	extract = sound._spawn(samples[:]) # negate end because we're counting from the end
+	start_index, end_index = find_indices(sound,peaks)
+	extract = sound._spawn(samples[start_index:end_index])
 	extract.export(f"Samples/{instrument}/{mute}/Sound/Sustain/{file_name}_Sustain.wav", format="wav")
 	return None
 	

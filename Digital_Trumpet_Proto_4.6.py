@@ -32,9 +32,9 @@ reg_5 = 23
 reg_6 = 18
 reg_7 = 15
 reg_8 = 14
-reg_9 = None
-reg_10 = None
-reg_11 = None
+reg_9 = 0
+reg_10 = 0
+reg_11 = 0
 
 # GPIO setup
 GPIO.setup(valve1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -56,6 +56,9 @@ GPIO.setup(reg_5, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(reg_6, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(reg_7, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(reg_8, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(reg_9, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(reg_10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(reg_11, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 
 # Define Instrument
@@ -142,6 +145,7 @@ advanced_valve_dict = {
             ('reg_6',_,_,T): 'C#6',
             ('reg_6',_,T,T): 'D6',
             ('reg_6',T,_,T): 'D#6',
+            ('reg_7',_,_,_): 'E6'
             }
 
 
@@ -210,13 +214,12 @@ while not interrupt_event.is_set():
     while GPIO.input(mouthpiece) == GPIO.HIGH:
         # what valve combination do I have?
         valves = (GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
-        vw_reg = (check_register(), GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
-        register = vw_reg[0]
+        valves_reg = (check_register(), GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
         # translate the valve combination into the name of the note
-        if register == None:
+        if valves_reg[0] == None:
               note_name = simple_valve_dict[valves]
         else:
-              note_name = advanced_valve_dict[vw_reg]
+              note_name = advanced_valve_dict[valves_reg]
       
         # on the first iteration of the note, play the "attack"
         if loop_var == 0:
