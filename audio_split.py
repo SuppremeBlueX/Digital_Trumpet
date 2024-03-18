@@ -76,6 +76,13 @@ def locate_peaks(sound):
 def find_indices(sound,peaks):
 	return None, None
 		
+def sample_sound_pieces(sound_file)
+	samples, peaks = locate_peaks(sound)
+	print (len(peaks))
+	start_index, end_index = find_indices(sound,peaks)
+	extract = sound._spawn(samples[start_index:end_index])
+	extract.export(f"Samples/{instrument}/{mute}/Sound/Sustain/{file_name}_Sustain.wav", format="wav")
+	return None
 
 def sample_sustain(sound):
 	samples, peaks = locate_peaks(sound)
@@ -112,9 +119,7 @@ end_trim = detect_silence(sound.reverse())
 
 sound = sound[start_trim:len(sound)-end_trim]
 
-sample_sustain(sound)
-sample_attack(sound)
-sample_release(sound)
+sample_sound_pieces(sound)
 # Sustain, then
 # Attack, then
 # End

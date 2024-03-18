@@ -113,6 +113,7 @@ advanced_valve_dict = {
             ('reg_0',T,T,_): 'A3_alt',
             ('reg_0',_,T,T): 'A#3',
             ('reg_0',T,_,T): 'B3',
+            ('reg_0',T,T,T): 'C4',
             ('reg_1',T,T,T): 'C4',
             ('reg_1',_,_,_): 'C#4',
             ('reg_1',_,T,_): 'D4',
@@ -145,7 +146,7 @@ advanced_valve_dict = {
             ('reg_6',_,_,T): 'C#6',
             ('reg_6',_,T,T): 'D6',
             ('reg_6',T,_,T): 'D#6',
-            ('reg_7',_,_,_): 'E6'
+            ('reg_7',T,T,T): 'E6'
             }
 
 
@@ -216,10 +217,13 @@ while not interrupt_event.is_set():
         valves = (GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
         valves_reg = (check_register(), GPIO.input(valve1), GPIO.input(valve2),  GPIO.input(valve3))
         # translate the valve combination into the name of the note
-        if valves_reg[0] == None:
-              note_name = simple_valve_dict[valves]
-        else:
+        
+        if valves_reg in advanced_valve_dict.keys():
               note_name = advanced_valve_dict[valves_reg]
+        else:
+              
+              if valves_reg[0] == None:
+                  note_name = simple_valve_dict[valves] # if no register, use the simple dict
       
         # on the first iteration of the note, play the "attack"
         if loop_var == 0:
