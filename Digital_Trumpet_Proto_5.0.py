@@ -269,11 +269,11 @@ while not interrupt_event.is_set():
                   print(f"Unknown note {note_name} encountered.")
             elif (unknown_count == 100000):
                   print(f"Still pressing unknown note {note_name}")
-            elif (unknown_count == 1000000):
+            elif (unknown_count == 200000):
                   print(f"Seriously???")
-            elif (unknown_count == 10000000):
+            elif (unknown_count == 500000):
                   print(f"Please Stop")
-            elif (unknown_count == 10000000):
+            elif (unknown_count == 1000000):
                   print(f"How's your finger?")
             unknown_count += 1
 #final cleanup
